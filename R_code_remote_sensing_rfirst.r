@@ -73,3 +73,17 @@ plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
 
+pdf("il_mio_primo_pdf.pdf") #creo l'immagine in pdf
+par(mfrow=c(2,2))
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="LIN")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
+dev.off()
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #cambio il tipo di stretch, non lineare ed enfatizzo i valori centrali
+
+#par natural colours,false colours and false colours with histogram stretch
+par(mfrow=c(3,1)) #creo una immagine con 3 immagine su una colonna
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist")
