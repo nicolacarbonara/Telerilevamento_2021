@@ -87,3 +87,6 @@ par(mfrow=c(3,1)) #creo una immagine con 3 immagine su una colonna
 plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist")
+
+install.packages("RStoolbox") #installo il pacchetto RStoolbox
+libary(RStoolbox) #carico il pacchetto
