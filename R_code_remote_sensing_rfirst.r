@@ -60,3 +60,16 @@ clr<-colorRampPalette(c("dark red", "red", "light pink"))(200)
 plot(p224r63_2011$B3_sre,col=clr)
 clnir<-colorRampPalette(c("red", "orange", "yellow"))(200)
 plot(p224r63_2011$B4_sre,col=clnir)
+
+#visualizing RBG
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="LIN") #associo al red la terza banda, al green la seconda e al blu la prima #stretch allarga i valori di riflettanza in maniera lineare
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") #montiamo l'infrarosso nella componente red quindi diventa rosso
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") #sposto l'IR sulla banda green
+plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin") #sposto l'IR sulla banda blue
+# mount a 2x2 multiframe
+par(mfrow=c(2,2))
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="LIN")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
+
