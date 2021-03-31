@@ -89,4 +89,28 @@ plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist")
 
 install.packages("RStoolbox") #installo il pacchetto RStoolbox
-libary(RStoolbox) #carico il pacchetto
+library(RStoolbox) #carico il pacchetto
+install.packages("ggplot2") #installo il pacchetto ggplot2
+library(ggplot2)  #richiamo il pacchetto ggplot2
+
+#image 1988
+p224r63_1988<-brick("p224r63_1988_masked") #importo il file p224r63_1988_masked interamente con tutte le sue bande
+plot(p224r63_1988) #plotto l'immagine con tutte le sue bande
+plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin") #plotto in RGB con allargamento dei valori di riflettanza lineare (stretch=Lin)
+#apro una immagine 2x2 confrontando le immagini del 1988 e 2011 con la banda r=IR
+pdf("confronto_1988-2011_2x2.pdf") #creo l'immagine in pdf
+par(mfrow=c(2,2))
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin") 
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="hist")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="hist")
+dev.off()
+
+
+
+
+
+
+
+
+
