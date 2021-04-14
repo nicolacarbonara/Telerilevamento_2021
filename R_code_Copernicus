@@ -5,4 +5,6 @@ library(raster)
 library(ncdf4)
 soil_w_index<-raster("c_gls_SWI1km_202104071200_CEURO_SCATSAR_V1.0.1.nc") # carico in R il file esterno
 cls <- colorRampPalette(c('light blue','green','red','yellow'))(150) #assegno una ramp palette
-plot(soil_w_index, col=cls)
+plot(soil_w_index, col=cls, main="water index") #plotto con il titolo
+soil_w_indexres<-aggregate(soil_w_index, fact=10) #ricampiono l'immagine di un fattore 10 (10x10 pixels e li trasformo in uno solo) e lo assegno a #soil_w_indexres linearmente
+plot(soil_w_indexres, col=cls, main="soil water index")
