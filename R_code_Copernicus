@@ -1,0 +1,7 @@
+# R_code_copernicus
+# Visualizing Copernicus data
+# ci servono delle librerie per aprire i file scaricati
+library(raster)
+library(ncdf4)
+soil_w_index<-raster("c_gls_SWI1km_202104071200_CEURO_SCATSAR_V1.0.1.nc") # carico in R il file esterno
+cls <- colorRampPalette(c('light blue','green','red','yellow'))(150) 
