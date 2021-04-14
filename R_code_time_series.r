@@ -45,3 +45,6 @@ melt_amount<- melt$X2007annual_melt - melt$X1979annual_melt #faccio la differenz
 #creo una nuova ramppalette con colori più efficaci
 cl2<-colorRampPalette(c("blue","white","dark red"))
 levelplot(melt_amount,col.regions=cl2, main="ice loss from 1979 to 2007")
+
+
+
