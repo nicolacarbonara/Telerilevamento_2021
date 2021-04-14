@@ -4,4 +4,5 @@
 library(raster)
 library(ncdf4)
 soil_w_index<-raster("c_gls_SWI1km_202104071200_CEURO_SCATSAR_V1.0.1.nc") # carico in R il file esterno
-cls <- colorRampPalette(c('light blue','green','red','yellow'))(150) 
+cls <- colorRampPalette(c('light blue','green','red','yellow'))(150) #assegno una ramp palette
+plot(soil_w_index, col=cls)
