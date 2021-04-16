@@ -1,4 +1,5 @@
-# my first code in R for remote sensing
+# my first code in R for remote sensing 
+#immagini Landsat
 
 setwd("C:/lab/") #imposto la cartella lab come cartella di lavoro
 library(raster) #carico il pacchetto raster all'interno del quale trovo brick
