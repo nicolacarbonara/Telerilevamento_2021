@@ -1,5 +1,6 @@
 # R_code_multivaried_analysis
-
+#serve per diminuire il set di variabili
+#quando ci sono variabili non molto correlabili, prendo il file originale e faccio la pca
 library(raster)
 library(RStoolbox)
 
@@ -10,3 +11,28 @@ plot(p224r63_2011)
 plot(p224r63_2011$B1_sre,p224r63_2011$B2_sre, col=red, pch=19, cex=2) #plotto dell'immagine, solo le bande b1 e b2 e vedo come sono correlati, Multicollinearità, cioè i punti sono ben correlati
 #voglio vedere la correlazione tra tutte le variabili e plottarle a coppie e vedere quelle che si correlano
 pairs(p224r63_2011)
+#ricampionare il dato poichè col PCA è troppo impattante con la risoluzione originale e aggreghiamo i pixel con una media generando un solo pixel.
+# essendo i pixel 30 x 30 m, fact è il fattore che utilizziamo per ingrandire il pixel.
+# aggregate cells
+p224r63_2011res<-aggregate(p224r63_2011, fact=10) #resampled #ingrandiamo il pixel e riduciamo la risoluzione dell'immagine di 10 volte
+p224r63_2011res #avrò una immagine 300 x 300 pxl
+par(mfrow=c(2,1))
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") #banda deel rosso c'è IR, nel verde il rosso
+plotRGB(p224r63_2011res, r=4, g=3, b=2, stretch="Lin")
+# PCA principal component analysis for rasters, passiamo l'asse lungo la variabilità maggiore e a quella minore. 
+p224r63_2011res_pca<-rasterPCA(p224r63_2011res)
+summary(p224r63_2011res_pca$model) #ci dà un sommario del nostro modello
+ # ecco il risultato 
+ #Importance of components:
+                          Comp.1      Comp.2       Comp.3       Comp.4
+#Standard deviation     1.2050671 0.046154880 0.0151509516 4.575220e-03
+#Proportion of Variance 0.9983595 0.001464535 0.0001578135 1.439091e-05 #la seconda banda aggiunge solo 0.1464535 % alla prima banda
+#Cumulative Proportion  0.9983595 0.999824022 0.9999818357 9.999962e-01 #con la sola prima componente spiego il 99,83595%, mentre con quattro bande il 99,99962e-01  cioè quasi la totalità.  
+                             Comp.5       Comp.6       Comp.7
+#Standard deviation     1.841357e-03 1.233374e-03 7.595367e-04
+#Proportion of Variance 2.330990e-06 1.045814e-06 3.966085e-07
+#Cumulative Proportion  9.999986e-01 9.999996e-01 1.000000e+00 #100%
+plot(p224r63_2011res_pca$map) #vedo che la prima banda già mi spiega molto
+#faccio un plot rgb con le prime 3 bande
+plotRGB(p224r63_2011res_pca$map, r=1, g=2, b=3, stretch="Lin")
+plot(p224r63_2011res_pca$map$PCA1, p224r63_2011res_pca$map$PCA2)
