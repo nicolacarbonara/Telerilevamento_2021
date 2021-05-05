@@ -1,6 +1,8 @@
 # R_code_vegetation_indices
 library(raster) #require(raster)
 library(RStoolbox)
+library(rasterdiv)
+library(rasterVis)
 setwd("C:/lab/")
 
 
@@ -30,4 +32,12 @@ vi <- spectralIndices(defor1, green = 3, red = 2, nir = 1) #spectral indices è 
 plot(vi, col=cl)
 #plot(vi$NDVI, col=cl) sarebbe uguale a plot(dvi1norm, col=cl, main="DVI at time 1")
 vi2<-spectralIndices(defor2, green = 3, red = 2, nir = 1)
-vidif<-vi-vi2
+vidif<- vi-vi2
+
+plot(vidif, col=cld)
+#world NDVI
+plot(copNDVI)
+#pixels with values 253, 254 and 255 (water) will be set as NA's
+copNDVI <- reclassify(copNDVI, cbind(253:255, NA))
+plot(copNDVI)
+levelplot(copNDVI)
