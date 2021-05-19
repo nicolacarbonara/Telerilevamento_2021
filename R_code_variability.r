@@ -15,3 +15,23 @@ plot(ndvi)
 ndvisd3<-focal(ndvi, w=matrix(1/9,nrow=3, ncol=3), fun=sd) #w=window, ovvero la matrice 3 x 3 #fun= function, sd= deviazione standard
 clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) #
 plot(ndvisd3, col=clsd)
+#cambio la dimensione della finestra mobile
+ndvisd5<-focal(ndvi, w=matrix(1/25,nrow=5, ncol=5), fun=sd) #w=window, ovvero la matrice 3 x 3 #fun= function, sd= deviazione standard
+clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) #
+plot(ndvisd3, col=clsd)
+#uso la funzione mean
+ndvisd5 <- focal(ndvi, w=matrix(1/25, nrow=5, ncol=5), fun=mean)
+clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) # 
+plot(ndvisd5, col=clsd)
+#calcoliamo la pca e usiamo solo la componente principale
+sentpca<-rasterPCA(sent)
+plot(sentpca$map)
+summary(sentpca$model)
+#the first pc explain 67.36804% of the original information
+
+
+
+
+
+
+
