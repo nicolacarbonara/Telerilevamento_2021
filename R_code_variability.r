@@ -28,9 +28,11 @@ sentpca<-rasterPCA(sent)
 plot(sentpca$map)
 summary(sentpca$model)
 #the first pc explain 67.36804% of the original information
-
-
-
+pc1<-sentpca$map$PC1
+devst5<-focal(pc1,w=matrix(1/25, nrow=5, ncol=5), fun=sd)
+clst<-colorRampPalette(c('blue', 'red', 'yellow', 'green', 'black'))(150)
+plot(devst5, col=clst, stretch="lin")
+# source function
 
 
 
