@@ -160,7 +160,8 @@ plot(lst_2010)
 plot(lst_2015)
 
 #per importare tutte le immagini in maniera sincrona
-rlist<-list.files(pattern="lst") #prendo lst come pattern comunne per caricare i file insieme
+# inserire una serie di immagini tutte insieme
+rlist<-list.files(pattern="lst") #prendo lst come pattern comunne per caricare i file insieme, creo una lista di file
 import<-lapply(rlist, raster) #applico la funzione raster a tutti i file contenuti nella rlist contemporaneamente e la associamo al dataset "import"
 #facciamo un file unico dalla lista (un pacchetto di files)
 TGr<-stack(import) #unisce tutti i file contenuti nella lista import
