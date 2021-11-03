@@ -81,11 +81,36 @@ spectral_s<-data.frame(band, forest, water) #faccio un dataframe
 
 spectral_st<-data.frame(band, time1, time2)
 
+# plot spectral signatures
 ggplot(spectral_st, aes(x=band)) + geom_line(aes(y=time1),color="red")+  #geom_line è il tipo di grafico, ggplot apre solo il plot, geom definisce il grafico
 geom_line(aes(y=time2),color="blue")+
 geom_line(aes(y=time1p2),color="grey")+
-geom_line(aes(y=time2p2),color="black")+
+geom_line(aes(y=time2p2),color="black", linetype="dotted")+
 labs(x="band",y="reflectance") #labs= labels
 
-ggplot(output
+# image from Earth Observatory
 
+caspio<-brick("caspian_2010.jpg")
+plotRGB(caspio, 1,2,3, stretch="hist")
+click(caspio, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue")
+
+# results
+#     x      y     cell caspian_2010.1 caspian_2010.2 caspian_2010.3
+#1 3432.5 2810.5 12275033             47             77             75
+#       x      y     cell caspian_2010.1 caspian_2010.2 caspian_2010.3
+#1 1464.5 3002.5 11428265             67             83             47
+#       x      y     cell caspian_2010.1 caspian_2010.2 caspian_2010.3
+#1 1586.5 2018.5 15757987             99             94             64
+
+band<-c(1,2,3)
+stratum1<-c(47,77,75)
+stratum2<-c(67,83,47) 
+stratum3<-c(99,94,64)
+
+spectralsg<-data.frame(band, stratum1, stratum2, stratum3) #faccio un dataframe
+
+ggplot(spectralsg, aes(x=band)) + 
+geom_line(aes(y=stratum1),color="red", linetype="dotted")+  #geom_line è il tipo di grafico, ggplot apre solo il plot, geom definisce il grafico
+geom_line(aes(y=stratum2),color="blue", linetype="dotted")+
+geom_line(aes(y=stratum3),color="grey", linetype="dotted")
+labs(x="band",y="reflectance") #labs= labels
