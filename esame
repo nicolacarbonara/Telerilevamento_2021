@@ -2,3 +2,27 @@
 
 # area di studio nord lago d'aral o nord mar caspio (delta del fiume immisario)
 
+setwd("C:/lab/lago_aral/")
+library(raster)
+library(rasterVis)
+
+#importo immagini in maniera sincrona
+
+rlist<-list.files(pattern="LC08_L1TP_161028_20130506_20170504_01_T1_B")
+import<-lapply(rlist,raster)
+
+lar2013<-stack(import) #unisce in un singolo file quelli che erano in lista
+plotRGB(lar2013, 4,3,2, stretch="lin")
+plotRGB(lar2013, 5,4,3, stretch="hist") #falsi colori IR
+
+rlist2<-list.files(pattern="LC08_L1TP_161028_20210512_20210524_01_T1_B")
+import<-lapply(rlist2,raster)
+
+lar2021<-stack(import) #unisce in un singolo file quelli che erano in lista
+plotRGB(lar2021, 4,3,2, stretch="lin")
+plotRGB(lar2021, 5,4,3, stretch="hist") #falsi colori IR
+
+green<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B3
+swir1<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B6
+ndwi<-(green-swir1)/(green+swir1)
+ndwisd<-focal(ndwi, w=matrix(1/9,nrow=3,ncol=3),fun=sd)
