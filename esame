@@ -8,19 +8,66 @@ library(rasterVis)
 
 #importo immagini in maniera sincrona
 
+# 2013
+
 rlist<-list.files(pattern="LC08_L1TP_161028_20130506_20170504_01_T1_B")
 import<-lapply(rlist,raster)
-
 lar2013<-stack(import) #unisce in un singolo file quelli che erano in lista
 plotRGB(lar2013, 4,3,2, stretch="lin")
 plotRGB(lar2013, 5,4,3, stretch="hist") #falsi colori IR
 
-rlist2<-list.files(pattern="LC08_L1TP_161028_20210512_20210524_01_T1_B")
-import<-lapply(rlist2,raster)
+# 2015
 
+rlist2<-list.files(pattern="LC08_L1TP_161028_20150528_20170408_01_T1_B")
+import<-lapply(rlist2,raster)
+lar2015<-stack(import) #unisce in un singolo file quelli che erano in lista
+plotRGB(lar2015, 4,3,2, stretch="lin")
+plotRGB(lar2015, 5,4,3, stretch="hist") #falsi colori IR
+
+# 2018
+
+rlist3<-list.files(pattern="LC08_L1TP_161028_20180520_20180605_01_T1_B")
+import<-lapply(rlist3,raster)
+lar2018<-stack(import) #unisce in un singolo file quelli che erano in lista
+plotRGB(lar2018, 4,3,2, stretch="lin")
+plotRGB(lar2018, 5,4,3, stretch="hist") #falsi colori IR
+
+# 2021
+
+rlist4<-list.files(pattern="LC08_L1TP_161028_20210512_20210524_01_T1_B")
+import<-lapply(rlist4,raster)
 lar2021<-stack(import) #unisce in un singolo file quelli che erano in lista
 plotRGB(lar2021, 4,3,2, stretch="lin")
 plotRGB(lar2021, 5,4,3, stretch="hist") #falsi colori IR
+
+#plotto le 4 immagini per presentarle
+
+par(mfrow=c(2,2))
+plotRGB(lar2013, 4,3,2, stretch="lin",main="2013")
+plotRGB(lar2015, 4,3,2, stretch="lin",main="2015")
+plotRGB(lar2018, 4,3,2, stretch="lin",main="2018")
+plotRGB(lar2021, 4,3,2, stretch="lin",main="2021")
+
+#plotto le 4 immagini per presentarle in IR
+
+par(mfrow=c(2,2))
+plotRGB(lar2013, 5,4,3, stretch="hist")
+plotRGB(lar2015, 5,4,3, stretch="hist")
+plotRGB(lar2018, 5,4,3, stretch="hist")
+plotRGB(lar2021, 5,4,3, stretch="hist")
+
+#mi focalizzo solo su 2013 e 2021
+
+par(mfrow=c(1,2))
+plotRGB(lar2013, 4,3,2, stretch="lin",main="2013")
+plotRGB(lar2021, 4,3,2, stretch="lin",main="2021")
+
+
+
+
+# come faccio a plottare con LEVELPLOT???
+# come faccio a plottare il pancromatico??
+
 
 green<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B3
 swir1<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B6
