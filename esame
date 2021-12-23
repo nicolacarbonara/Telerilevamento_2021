@@ -101,6 +101,10 @@ nir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B5
 red2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B4
 ndwi<-(nir2013-red2013)/(nir2013+red2013)
 
+# levelplot di mndwi
+
+rlist5<-list.files(mndwi2013, mndwi2021)
+
 # per associare l'immagine da 20 m a 10 m uso aggregate con fattore=2
 # esempio 
 # bbq<-aggregate(immagine_grande, fact=2)
