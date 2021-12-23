@@ -5,6 +5,10 @@
 setwd("C:/lab/lago_aral/")
 library(raster)
 library(rasterVis)
+library(RStoolbox)
+library(ggplot2)
+library(gridExtra)
+
 
 #importo immagini in maniera sincrona
 
@@ -63,13 +67,42 @@ plotRGB(lar2013, 4,3,2, stretch="lin",main="2013")
 plotRGB(lar2021, 4,3,2, stretch="lin",main="2021")
 
 
-
-
 # come faccio a plottare con LEVELPLOT???
 # come faccio a plottare il pancromatico??
 
+# MNDWI 2013
 
-green<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B3
-swir1<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B6
-ndwi<-(green-swir1)/(green+swir1)
-ndwisd<-focal(ndwi, w=matrix(1/9,nrow=3,ncol=3),fun=sd)
+green2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B3
+swir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B6
+mndwi2013<-(green2013-swir2013)/(green2013+swir2013)
+cl<-colorRampPalette(c("darkblue","yellow","red","black"))(100)
+plot(mndwi2013, col=cl)
+
+# valori da 
+#mndwisd<-focal(mndwi, w=matrix(1/9,nrow=3,ncol=3),fun=sd)
+
+# MNDWI 2021
+
+green2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B3
+swir2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B6
+mndwi2021<-(green2021-swir2021)/(green2021+swir2021)
+cl<-colorRampPalette(c("darkblue","yellow","red","black"))(100)
+plot(mndwi2021, col=cl)
+
+# MNDWI 2021 - MNDWI 2013
+
+cl_diff<-colorRampPalette(c("darkblue","blue","khaki1","white","black"))(200)
+mndwi_diff<- mndwi2013-mndwi2021
+plot(mndwi_diff, col=cl_diff)
+
+# NDVI
+
+nir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B5
+red2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B4
+ndwi<-(nir2013-red2013)/(nir2013+red2013)
+
+# per associare l'immagine da 20 m a 10 m uso aggregate con fattore=2
+# esempio 
+# bbq<-aggregate(immagine_grande, fact=2)
+
+
