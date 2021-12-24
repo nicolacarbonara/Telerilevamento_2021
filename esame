@@ -95,11 +95,29 @@ cl_diff<-colorRampPalette(c("darkblue","blue","khaki1","white","black"))(200)
 mndwi_diff<- mndwi2013-mndwi2021
 plot(mndwi_diff, col=cl_diff)
 
-# NDVI
+# NDVI 2013
 
+cs<-colorRampPalette(c("black","green","white","red"))(150)
 nir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B5
 red2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B4
-ndwi<-(nir2013-red2013)/(nir2013+red2013)
+ndvi2013<-(nir2013-red2013)/(nir2013+red2013)
+plot(ndvi2013, col=cs)
+
+# NDVI 2021
+
+nir2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B5
+red2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B4
+ndvi2021<-(nir2021-red2021)/(nir2021+red2021)
+plot(ndvi2021, col=cs)
+
+# NDVI 2021 - NDVI 2013
+
+ndvi_diff<- ndvi2013-ndvi2021
+plot(ndvi_diff, col=cl_diff)
+
+#
+
+pairs(lar2021) #faccio la correlazione tra tutte le variabili e plottarle a coppie e vedere quelle che si correlano
 
 # levelplot di mndwi
 
