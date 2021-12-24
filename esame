@@ -115,7 +115,12 @@ plot(ndvi2021, col=cs)
 ndvi_diff<- ndvi2013-ndvi2021
 plot(ndvi_diff, col=cl_diff)
 
-#
+# unsuperClass
+
+clas2013<-unsuperClass(mndwi2013, nClasses=3)
+set.seed(42)
+clas<-unsuperClass(mndwi2013, nClasses=3)
+plot(clas$map, col=cl)
 
 pairs(lar2021) #faccio la correlazione tra tutte le variabili e plottarle a coppie e vedere quelle che si correlano
 
