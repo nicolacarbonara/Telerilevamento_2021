@@ -109,6 +109,12 @@ colnames(mdf) <- c("X","Y","mndwidif")
 b.m <- seq(min(mdf$mndwidif),max(mdf$mndwidif),length.out=100)
 ggplot(mdf,aes(X,Y))+geom_raster(aes(x=X,y=Y,fill=mndwidif),hjust=0.5,vjust=0.5,interpolate=F)
 
+## Calculate NDVI
+ndvi <- spectralIndices(lsat, red = "B3_dn", nir = "B4_dn", indices = "NDVI")
+ndvi
+ggR(ndvi, geom_raster = TRUE) +
+        scale_fill_gradientn(colours = c("black", "white")) 
+
 # NDVI 2013
 
 cs<-colorRampPalette(c("black","green","white","red"))(150)
