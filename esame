@@ -17,62 +17,46 @@ library(gridExtra)
 rlist<-list.files(pattern="LC08_L1TP_161028_20130506_20170504_01_T1_B")
 import<-lapply(rlist,raster)
 lar2013<-stack(import) #unisce in un singolo file quelli che erano in lista
-p1<-ggRGB(lar2013, 4,3,2, stretch="lin")
-p2<-ggRGB(lar2013, 5,4,3, stretch="hist") #falsi colori IR
-grid.arrange(p1,p2,nrow=1)
+p1<-ggRGB(lar2013, 4,3,2, stretch="lin")+labs(title="2013")
+p2<-ggRGB(lar2013, 5,4,3, stretch="hist")+labs(title="2013 IR") #falsi colori IR
+grid.arrange(p1,p2,nrow=1,top="Confronto tra RGB e IR")
 
 # 2015
 
 rlist2<-list.files(pattern="LC08_L1TP_161028_20150528_20170408_01_T1_B")
 import<-lapply(rlist2,raster)
 lar2015<-stack(import) #unisce in un singolo file quelli che erano in lista
-p3<-ggRGB(lar2015, 4,3,2, stretch="lin")
-p4<-ggRGB(lar2015, 5,4,3, stretch="hist") #falsi colori IR
-grid.arrange(p3,p4,nrow=1)
+p3<-ggRGB(lar2015, 4,3,2, stretch="lin")+labs(title="2015")
+p4<-ggRGB(lar2015, 5,4,3, stretch="hist")+labs(title="2015 IR") #falsi colori IR
+grid.arrange(p3,p4,nrow=1,top="Confronto tra RGB e IR")
 
 # 2018
 
 rlist3<-list.files(pattern="LC08_L1TP_161028_20180520_20180605_01_T1_B")
 import<-lapply(rlist3,raster)
 lar2018<-stack(import) #unisce in un singolo file quelli che erano in lista
-p5<-ggRGB(lar2018, 4,3,2, stretch="lin")
-p6<-ggRGB(lar2018, 5,4,3, stretch="hist") #falsi colori IR
-grid.arrange(p5,p6,nrow=1)
+p5<-ggRGB(lar2018, 4,3,2, stretch="lin")+labs(title="2018")
+p6<-ggRGB(lar2018, 5,4,3, stretch="hist")+labs(title="2018 IR") #falsi colori IR
+grid.arrange(p5,p6,nrow=1,top="Confronto tra RGB e IR")
 
 # 2021
 
 rlist4<-list.files(pattern="LC08_L1TP_161028_20210512_20210524_01_T1_B")
 import<-lapply(rlist4,raster)
 lar2021<-stack(import) #unisce in un singolo file quelli che erano in lista
-p7<-ggRGB(lar2021, 4,3,2, stretch="lin")
-p8<-ggRGB(lar2021, 5,4,3, stretch="hist") #falsi colori IR
-grid.arrange(p7,p8,nrow=1)
+p7<-ggRGB(lar2021, 4,3,2, stretch="lin")+labs(title="2021")
+p8<-ggRGB(lar2021, 5,4,3, stretch="hist")+labs(title="2021 IR") #falsi colori IR
+grid.arrange(p7,p8,nrow=1,top="Confronto tra RGB e IR")
 
 #plotto le 4 immagini per presentarle
 
-par(mfrow=c(2,2))
-plotRGB(lar2013, 4,3,2, stretch="lin",main="2013")
-plotRGB(lar2015, 4,3,2, stretch="lin",main="2015")
-plotRGB(lar2018, 4,3,2, stretch="lin",main="2018")
-plotRGB(lar2021, 4,3,2, stretch="lin",main="2021")
+grid.arrange(p1,p3,p5,p7,nrow=2,ncol=2, top="Time Series del Lago d'Aral")
 
 #plotto le 4 immagini per presentarle in IR
-
-par(mfrow=c(2,2))
-plotRGB(lar2013, 5,4,3, stretch="hist")
-plotRGB(lar2015, 5,4,3, stretch="hist")
-plotRGB(lar2018, 5,4,3, stretch="hist")
-plotRGB(lar2021, 5,4,3, stretch="hist")
+grid.arrange(p2,p4,p6,p8,nrow=2,ncol=2, top="Time Series del Lago d'Aral")
 
 #mi focalizzo solo su 2013 e 2021
-
-par(mfrow=c(1,2))
-plotRGB(lar2013, 4,3,2, stretch="lin",main="2013")
-plotRGB(lar2021, 4,3,2, stretch="lin",main="2021")
-
-
-# come faccio a plottare con LEVELPLOT???
-# come faccio a plottare il pancromatico??
+grid.arrange(p1,p7,nrow=1, top="Confronto  2013 / 2021")
 
 # MNDWI 2013
 
@@ -98,6 +82,32 @@ plot(mndwi2021, col=cl)
 cl_diff<-colorRampPalette(c("darkblue","blue","khaki1","white","black"))(200)
 mndwi_diff<- mndwi2013-mndwi2021
 plot(mndwi_diff, col=cl_diff)
+
+#per plottare con ggplot2 devo rendere il raster un dataframe
+mndwidif2<-aggregate(mndwi_diff, fact=3)
+mdf2 <- rasterToPoints(mndwidif2)
+mdf2 <- data.frame(mdf2)
+colnames(mdf2) <- c("X","Y","mndwidif2")
+b.m2 <- seq(min(mdf2$mndwidif2),max(mdf2$mndwidif2),length.out=100)
+ggplot(mdf2,aes(X,Y))+geom_raster(aes(x=X,y=Y,fill=mndwidif2),hjust=0.5,vjust=0.5,interpolate=F)
+ggplot(hdf)+
+  geom_raster(data=ddf,aes(X,Y,fill=DEM))+
+  scale_fill_gradientn(name="Altitude",colours = rainbow(20))+
+  guides(fill = guide_colorbar()) +
+  geom_tile(aes(X,Y,alpha=Hill), fill = "grey20") +
+  scale_alpha(range = c(0, 0.5)) +
+  scale_x_continuous(name=expression(paste("Longitude (",degree,")")),
+    limits=c(-4,2),expand=c(0,0)) +
+  scale_y_continuous(name=expression(paste("Latitude (",degree,")")),
+    limits=c(4,12),expand=c(0,0)) +
+  coord_equal()
+
+
+mdf <- rasterToPoints(mndwi_diff)
+mdf <- data.frame(mdf)
+colnames(mdf) <- c("X","Y","mndwidif")
+b.m <- seq(min(mdf$mndwidif),max(mdf$mndwidif),length.out=100)
+ggplot(mdf,aes(X,Y))+geom_raster(aes(x=X,y=Y,fill=mndwidif),hjust=0.5,vjust=0.5,interpolate=F)
 
 # NDVI 2013
 
