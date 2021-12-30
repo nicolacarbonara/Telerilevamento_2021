@@ -58,6 +58,19 @@ grid.arrange(p2,p4,p6,p8,nrow=2,ncol=2, top="Time Series del Lago d'Aral")
 #mi focalizzo solo su 2013 e 2021
 grid.arrange(p1,p7,nrow=1, top="Confronto  2013 / 2021")
 
+# unsuperClass dell'immagine 2013
+set.seed(42)
+clasimm2013<-unsuperClass(lar2013, nClasses=4)
+plot(clasimm2013$map, col=cl) #si vedono le aree bagnate
+freq(clasimm2013$map)       #FINIRE COME UNSUPERCLASS DI SOTTO
+s1<- somma delle frequenze
+prop1<-((freq(clasimm2013$map)/s1)*100 eccc
+
+# unsuperClass dell'immagine 2021
+set.seed(42)
+clasimm2021<-unsuperClass(lar2021, nClasses=4)
+plot(clasimm2021$map, col=cl) #si vedono le aree bagnate
+
 # MNDWI 2013
 
 green2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B3
@@ -83,6 +96,9 @@ cl_diff<-colorRampPalette(c("darkblue","blue","khaki1","white","black"))(200)
 mndwi_diff<- mndwi2013-mndwi2021
 plot(mndwi_diff, col=cl_diff)
 
+
+
+_________________________________________________________________________________
 #per plottare con ggplot2 devo rendere il raster un dataframe
 mndwidif2<-aggregate(mndwi_diff, fact=3)
 mdf2 <- rasterToPoints(mndwidif2)
@@ -114,6 +130,10 @@ ndvi <- spectralIndices(lsat, red = "B3_dn", nir = "B4_dn", indices = "NDVI")
 ndvi
 ggR(ndvi, geom_raster = TRUE) +
         scale_fill_gradientn(colours = c("black", "white")) 
+____________________________________________________________________________________
+
+
+
 
 # NDVI 2013
 
@@ -129,28 +149,51 @@ nir2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B5
 red2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B4
 ndvi2021<-(nir2021-red2021)/(nir2021+red2021)
 plot(ndvi2021, col=cs)
-
+##########trovare una rampPalette idonea
+ct<-colorRampPalette(c("blue","white,"red"))(200)
 # NDVI 2021 - NDVI 2013
 
 ndvi_diff<- ndvi2013-ndvi2021
-plot(ndvi_diff, col=cl_diff)
+plot(ndvi_diff, col=ct)
 
-# unsuperClass
+# unsuperClass MNDWI
 
 greenn2013<-raster("LC08_L1TP_161028_20130506_20170504_01_T1_B3.TIF")
 swirr2013<-raster("LC08_L1TP_161028_20130506_20170504_01_T1_B6.TIF")
 mndwii2013<-(greenn2013-swirr2013)/(greenn2013+swirr2013)
-plot(mndwii2013, col=cl)
+#plot(mndwii2013, col=cl)
 clas2013<-unsuperClass(mndwii2013, nClasses=4)
 set.seed(42)
 class2013<-unsuperClass(mndwii2013, nClasses=4)
-plot(clas$map, col=cl)
+plot(class2013$map, col=cl)
+class2013$model #raccolgo il n° di pixel e faccio degli istogrammi
 
+class2021<-unsuperClass(mndwi2021, nClasses=4)
+plot(class2021$map)
+class2021$model #faccio istogrammi per banda e pixel e poi vedo di fare una sottrazione
+
+freq(class2013$map)
+#      value    count
+# [1,]     1 13028955
+# [2,]     2  7815351
+# [3,]     3 14780415
+# [4,]     4  3154471
+# [5,]    NA 16577189
+s1<-13028955+7815351+14780415+3154471
+s1
+# [1] 38779192
+prop1<-(freq(class2013$map)/38779192)*100
+#             value     count
+# [1,] 2.578703e-06 33.597799
+# [2,] 5.157405e-06 20.153465
+# [3,] 7.736108e-06 38.114293
+# [4,] 1.031481e-05  8.134442
+# [5,]           NA 42.747639
+
+pairs(lar2013)
 pairs(lar2021) #faccio la correlazione tra tutte le variabili e plottarle a coppie e vedere quelle che si correlano
 
-# levelplot di mndwi
 
-rlist5<-list.files(mndwi2013, mndwi2021)
 
 # per associare l'immagine da 20 m a 10 m uso aggregate con fattore=2
 # esempio 
@@ -159,7 +202,7 @@ rlist5<-list.files(mndwi2013, mndwi2021)
 
 
 
-
+__________________________________________________________________________
 olpar <- par(no.readonly = TRUE) # back-up par
 par(mfrow=c(1,2))
 colors <- rainbow(5)
@@ -183,3 +226,4 @@ encodeQA(fill = "no", terrainOcclusion = "no", radSaturation = "na",
   
 ggRGB(mndwii2013, r = 3, g = 2, b = 1, scale, maxpixels = 5e+05,
   stretch = "none")
+_______________________________________________________________________________
