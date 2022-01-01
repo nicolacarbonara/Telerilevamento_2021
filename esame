@@ -63,13 +63,21 @@ set.seed(42)
 clasimm2013<-unsuperClass(lar2013, nClasses=4)
 plot(clasimm2013$map, col=cl) #si vedono le aree bagnate
 freq(clasimm2013$map)       #FINIRE COME UNSUPERCLASS DI SOTTO
-s1<- somma delle frequenze
-prop1<-((freq(clasimm2013$map)/s1)*100 eccc
+df<-freq(clasimm2013$map) #creo un piccolo dataframe con i pixel categorizzati
+sum2013<-sum(df[,2]) #sommp tutta la seconda colonna
+df$percentuale2013<-(df[,2]/sum2013)*100 #aggiungo un vettore interno con le percentuali
+df$percentuale2013
+# [1] 29.94807 36.43954 15.53917 18.07322
 
 # unsuperClass dell'immagine 2021
 set.seed(42)
 clasimm2021<-unsuperClass(lar2021, nClasses=4)
 plot(clasimm2021$map, col=cl) #si vedono le aree bagnate
+freq(clasimm2021$map)       #FINIRE COME UNSUPERCLASS DI SOTTO
+df2021<-freq(clasimm2013$map) #creo un piccolo dataframe con i pixel categorizzati
+sum2021<-sum(df2021[,2]) #sommp tutta la seconda colonna
+df$percentuale2021<-(df2021[,2]/sum2021)*100 #aggiungo un vettore interno con le percentuali
+df$percentuale2021
 
 # MNDWI 2013
 
