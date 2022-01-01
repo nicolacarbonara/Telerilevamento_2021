@@ -73,9 +73,9 @@ df$percentuale2013
 set.seed(42)
 clasimm2021<-unsuperClass(lar2021, nClasses=4)
 plot(clasimm2021$map, col=cl) #si vedono le aree bagnate
-freq(clasimm2021$map)       #FINIRE COME UNSUPERCLASS DI SOTTO
+freq(clasimm2021$map)     
 df2021<-freq(clasimm2013$map) #creo un piccolo dataframe con i pixel categorizzati
-sum2021<-sum(df2021[,2]) #sommp tutta la seconda colonna
+sum2021<-sum(df2021[,2]) #sommp tutta la seconda colonna ######################## DA RIVEDERE QUESTE DUE RIGHE
 df$percentuale2021<-(df2021[,2]/sum2021)*100 #aggiungo un vettore interno con le percentuali
 df$percentuale2021
 
