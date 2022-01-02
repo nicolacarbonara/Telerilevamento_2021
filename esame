@@ -63,11 +63,16 @@ set.seed(42)
 clasimm2013<-unsuperClass(lar2013, nClasses=4)
 plot(clasimm2013$map, col=cl) #si vedono le aree bagnate
 freq(clasimm2013$map)       #FINIRE COME UNSUPERCLASS DI SOTTO
-df<-freq(clasimm2013$map) #creo un piccolo dataframe con i pixel categorizzati
-sum2013<-sum(df[,2]) #sommp tutta la seconda colonna
-df$percentuale2013<-(df[,2]/sum2013)*100 #aggiungo un vettore interno con le percentuali
-df$percentuale2013
-# [1] 29.94807 36.43954 15.53917 18.07322
+df1<-data.frame(freq(clasimm2013$map)) #creo un piccolo dataframe con i pixel categorizzati
+sum2013<-sum(df1$count) #sommp tutta la colonna dei count
+df1$perc_2013<-(df1$count/sum2013)*100 #aggiungo un vettore interno al dataframe con le percentuali del 2013
+rownames(df1)<-c("classe_1","classe_2","classe_3","classe_4") #ho rinominato le righe
+colnames(df1)<-c("classe","count","perc_2013") #ho rinominato le colonne
+#df1<-data.frame(classe=df1$value,perc_2013=df1$percentuale2013) #aggiorno il dataframe con solo le info che mi servono
+df1$classe<-c("classe_1","classe_2","classe_3","area bagnata")
+ggplot(df1,aes(x=classe,y=perc_2013))+(geom_bar(stat="identity", fill="red"))+labs(x="Classi",y="Percentuale")
+
+
 
 # unsuperClass dell'immagine 2021
 set.seed(42)
@@ -84,7 +89,7 @@ df$percentuale2021
 green2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B3
 swir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B6
 mndwi2013<-(green2013-swir2013)/(green2013+swir2013)
-cl<-colorRampPalette(c("darkblue","yellow","red","black"))(100)
+cl<-colorRampPalette(c("darkblue","yellow","red","black"))(1
 plot(mndwi2013, col=cl)
 
 # valori da 
