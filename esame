@@ -63,29 +63,53 @@ cl<-colorRampPalette(c("darkblue","yellow","red","black"))(150)
 set.seed(42)
 clasimm2013<-unsuperClass(lar2013, nClasses=4)
 plot(clasimm2013$map, col=cl) #si vedono le aree bagnate
-freq(clasimm2013$map)       #FINIRE COME UNSUPERCLASS DI SOTTO
+freq(clasimm2013$map)       
 df1<-data.frame(freq(clasimm2013$map)) #creo un piccolo dataframe con i pixel categorizzati
 sum2013<-sum(df1$count) #sommp tutta la colonna dei count
 df1$perc_2013<-(df1$count/sum2013)*100 #aggiungo un vettore interno al dataframe con le percentuali del 2013
 rownames(df1)<-c("classe_1","classe_2","classe_3","classe_4") #ho rinominato le righe
 colnames(df1)<-c("classe","count","perc_2013") #ho rinominato le colonne
 #df1<-data.frame(classe=df1$value,perc_2013=df1$percentuale2013) #aggiorno il dataframe con solo le info che mi servono
-df1$classe<-c("Classe 1","Classe 2","Classe 3", "Area Bagnata")
-ggplot(df1,aes(x=classe,y=perc_2013, fill=classe))+(geom_bar(stat="identity", color="black"))+labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2013")+theme(legend.position="bottom")
+df1$classe<-c("Classe 1","Classe 2","Classe 3", "Classe 4")
+p9<-ggplot(df1,aes(x=classe,y=perc_2013, fill=classe))+(geom_bar(stat="identity", color="black"))+labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2013")+theme(legend.position="bottom")
 
 
 # unsuperClass dell'immagine 2021
 set.seed(42)
 clasimm2021<-unsuperClass(lar2021,nClasses=4)
 plot(clasimm2021$map, col=cl) #si vedono le aree bagnate
-freq(clasimm2021$map)   #FINIRE COME UNSUPERCLASS DI SOTTO
+freq(clasimm2021$map)   
 df2<-data.frame(freq(clasimm2021$map)) #houn piccolo dataframe con i pixel categorizzati
 sum2021<-sum(df2$count) #sommp tutta la colonna dei count
 df2$perc_2021<-(df2$count/sum2021)*100#ggiungo un vettore interno al dataframe con le percentuali del 2013
 rownames(df2)<-c("classe_1","classe_2","classe_3","classe_4") #ho rinominato le righe
-colnames(df2)<-c("classe","count","perc_2013") #ho rinominato le colonne
-df2$classe<-c("Classe 1","Classe 2","Classe 3", "Area Bagnata")
-ggplot(df2,aes(x=classe,y=perc_2021, fill=classe))+(geom_bar(stat="identity", color="black"))+labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2021")+theme(legend.position="bottom")
+colnames(df2)<-c("classe","count","perc_2021") #ho rinominato le colonne
+df2$classe<-c("Classe 1","Classe 2","Classe 3", "Classe 4")
+p10<-ggplot(df2,aes(x=classe,y=perc_2021, fill=classe))+(geom_bar(stat="identity", color="black"))+labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2021")+theme(legend.position="bottom")
+
+par(mfrow=c(1,2))
+plot(clasimm2013$map, col=cl)
+plot(clasimm2021$map, col=cl)
+grid.arrange(p9,p10,nrow=1,top="Confronto tra unsuperClass del 2013 e 2021")
+
+df1
+#               classe    count perc_2013
+# classe_1     Classe 1 16578169  29.94807
+# classe_2     Classe 2 20171610  36.43954
+# classe_3     Classe 3  8601923  15.53917
+# classe_4     Classe 4 10004679  18.07322
+
+df2
+#               classe    count perc_2013
+# classe_1     Classe 1 23066681  38.79627
+# classe_2     Classe 2  5849422   9.83825              QUESTE CATEGORIE CAMBIANO DI VOLTA IN VOLTA. QUANDO SI FA IL DEFINITIVO, CAMBIARE QUALCHE CLASSE NEI CALCOLI
+# classe_3     Classe 3 12714691  21.38507
+# classe_4     Classe 4 17825127  29.98041
+
+diff_perc<-(((df1[3,2])-(df2[2,2]))/df1[3,2])*100
+diff_perc
+# [1] 31.99867  # Percentuale di riduzione dell'area bagnata rispetto al 2013       IN QUESTO CASO, NUMERO CORRETTO MA CLASSI DI VOLTA IN VOLTA DIVERSE
+
 
 # MNDWI 2013
 
@@ -106,14 +130,26 @@ mndwi2021<-(green2021-swir2021)/(green2021+swir2021)
 cl<-colorRampPalette(c("darkblue","yellow","red","black"))(150)
 plot(mndwi2021, col=cl)
 
-# MNDWI 2021 - MNDWI 2013
+# MNDWI 2021 - MNDWI 2013 per le acque
 
 cl_diff<-colorRampPalette(c("darkblue","blue","khaki1","white","black"))(200)
 mndwi_diff<- mndwi2013-mndwi2021
-plot(mndwi_diff, col=cl_diff)
+plot(mndwi_diff, col=cl_diff) 
 
+# RDI INDICE DI SICCITà
+#swir2/IR
 
+#NDSI INDICE SALINITà
+#swir1-swir2/swir1+swir2
 
+#SI SHAPE INDEX
+#2R-G-B/(G-B)
+
+#GREEN RED NDVI
+# NIR-(G+R)/(NIR+(G+R))
+
+#SPECTRAL SIGNATURE
+#CLICK ECCCCC
 _________________________________________________________________________________
 #per plottare con ggplot2 devo rendere il raster un dataframe
 mndwidif2<-aggregate(mndwi_diff, fact=3)
@@ -174,19 +210,19 @@ plot(ndvi_diff, col=ct)
 
 # unsuperClass MNDWI
 
-greenn2013<-raster("LC08_L1TP_161028_20130506_20170504_01_T1_B3.TIF")
-swirr2013<-raster("LC08_L1TP_161028_20130506_20170504_01_T1_B6.TIF")
-mndwii2013<-(greenn2013-swirr2013)/(greenn2013+swirr2013)
+#greenn2013<-raster("LC08_L1TP_161028_20130506_20170504_01_T1_B3.TIF")
+#swirr2013<-raster("LC08_L1TP_161028_20130506_20170504_01_T1_B6.TIF")
+#mndwii2013<-(greenn2013-swirr2013)/(greenn2013+swirr2013)
 #plot(mndwii2013, col=cl)
-clas2013<-unsuperClass(mndwii2013, nClasses=4)
-set.seed(42)
-class2013<-unsuperClass(mndwii2013, nClasses=4)
-plot(class2013$map, col=cl)
-class2013$model #raccolgo il n° di pixel e faccio degli istogrammi
+#clas2013<-unsuperClass(mndwii2013, nClasses=4)
+#set.seed(42)
+#class2013<-unsuperClass(mndwii2013, nClasses=4)
+#plot(class2013$map, col=cl)
+#class2013$model #raccolgo il n° di pixel e faccio degli istogrammi
 
-class2021<-unsuperClass(mndwi2021, nClasses=4)
-plot(class2021$map)
-class2021$model #faccio istogrammi per banda e pixel e poi vedo di fare una sottrazione
+#class2021<-unsuperClass(mndwi2021, nClasses=4)
+#plot(class2021$map)
+#class2021$model #faccio istogrammi per banda e pixel e poi vedo di fare una sottrazione
 
 freq(class2013$map)
 #      value    count
@@ -195,10 +231,10 @@ freq(class2013$map)
 # [3,]     3 14780415
 # [4,]     4  3154471
 # [5,]    NA 16577189
-s1<-13028955+7815351+14780415+3154471
-s1
+#s1<-13028955+7815351+14780415+3154471
+#s1
 # [1] 38779192
-prop1<-(freq(class2013$map)/38779192)*100
+#prop1<-(freq(class2013$map)/38779192)*100
 #             value     count
 # [1,] 2.578703e-06 33.597799
 # [2,] 5.157405e-06 20.153465
@@ -243,3 +279,9 @@ encodeQA(fill = "no", terrainOcclusion = "no", radSaturation = "na",
 ggRGB(mndwii2013, r = 3, g = 2, b = 1, scale, maxpixels = 5e+05,
   stretch = "none")
 _______________________________________________________________________________
+
+
+
+
+
+#credit: indexdatabase.de
