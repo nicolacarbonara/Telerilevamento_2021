@@ -8,7 +8,7 @@ library(rasterVis)
 library(RStoolbox)
 library(ggplot2)
 library(gridExtra)
-
+library(rgdal)
 
 #importo immagini in maniera sincrona
 
@@ -148,8 +148,12 @@ plot(mndwi_diff, col=cl_diff)
 #GREEN RED NDVI
 # NIR-(G+R)/(NIR+(G+R))
 
-#SPECTRAL SIGNATURE
+# SPECTRAL SIGNATURE
 #CLICK ECCCCC
+plotRGB(lar2013, 5,4,3, stretch="hist")
+click(lar2013,id=T,xy=T,cell=T,type="point",pch=16,cex=4,col="blue")
+
+
 _________________________________________________________________________________
 #per plottare con ggplot2 devo rendere il raster un dataframe
 mndwidif2<-aggregate(mndwi_diff, fact=3)
