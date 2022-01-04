@@ -9,6 +9,7 @@ library(RStoolbox)
 library(ggplot2)
 library(gridExtra)
 library(rgdal)
+library(ggpubr)
 
 #importo immagini in maniera sincrona
 
@@ -186,9 +187,35 @@ tdp8<-c(1722,	1957,	2202,	2812,	149,	2929,	3841,	61)
 tdp9<-c(645,	708,	620,	1082,	-1325,	1607,	2409,	3)
 tdp10<-c(833,	1016,	1617,	2394,	993,	3013,	3359,	-3)
 spectral_s<-data.frame(band, t1p1,	t1p2,	t1p3,	t1p4,	t1p5,	t1p6,	t1p7,	t1p8,	t1p9,	t1p10,	t2p1,	t2p2,	t2p3,	t2p4,	t2p5,	t2p6,	t2p7,	t2p8,	t2p9,	t2p10,	tdp1,	tdp2,	tdp3,	tdp4,	tdp5,	tdp6,	tdp7,	tdp8,	tdp9,	tdp10)
-gg1<-ggplot(spectral_s,aes(x=band,y=t1p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Percentuale per Classe 2021")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,20000))
-gg2<-ggplot(spectral_s,aes(x=band,y=t2p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Percentuale per Classe 2021")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,20000))
-ggarrange(gg1,gg2, ncol = 2, nrow = 1,common.legend = TRUE)
+gg1<-ggplot(spectral_s,aes(x=band,y=t1p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 1 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg2<-ggplot(spectral_s,aes(x=band,y=t2p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 1 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg3<-ggplot(spectral_s,aes(x=band,y=t1p2, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 2 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg4<-ggplot(spectral_s,aes(x=band,y=t2p2, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 2 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg5<-ggplot(spectral_s,aes(x=band,y=t1p3, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 3 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg6<-ggplot(spectral_s,aes(x=band,y=t2p3, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 3 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+ggarrange(gg1,gg2,gg3,gg4,gg5,gg6, ncol = 2, nrow = 3,common.legend = TRUE)
+
+gg7<-ggplot(spectral_s,aes(x=band,y=t1p4, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 4 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg8<-ggplot(spectral_s,aes(x=band,y=t2p4, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 4 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg9<-ggplot(spectral_s,aes(x=band,y=t1p5, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 5 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg10<-ggplot(spectral_s,aes(x=band,y=t2p5, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 5 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+ggarrange(gg7,gg8,gg9,gg10, ncol = 2, nrow = 2,common.legend = TRUE)
+gg11<-ggplot(spectral_s,aes(x=band,y=t1p6, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 6 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg12<-ggplot(spectral_s,aes(x=band,y=t2p6, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 6 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg13<-ggplot(spectral_s,aes(x=band,y=t1p7, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 7 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg14<-ggplot(spectral_s,aes(x=band,y=t2p7, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 7 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+ggarrange(gg11,gg12,gg13,gg14, ncol = 2, nrow = 2,common.legend = TRUE)
+gg15<-ggplot(spectral_s,aes(x=band,y=t1p8, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 8 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg16<-ggplot(spectral_s,aes(x=band,y=t2p8, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 8 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg17<-ggplot(spectral_s,aes(x=band,y=t1p9, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 9 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg18<-ggplot(spectral_s,aes(x=band,y=t2p9, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 9 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg19<-ggplot(spectral_s,aes(x=band,y=t1p10, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 10 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg20<-ggplot(spectral_s,aes(x=band,y=t2p10, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 10 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+ggarrange(gg15,gg16,gg17,gg18,gg19,gg20, ncol = 2, nrow = 3,common.legend = TRUE)
+
+
+
+
 #ggplot(spectral_s,aes(x=band,y=t1p2, fill=band))+(geom_bar(position="dodge",stat="identity", color="black"))+scale_fill_viridis(discrete = T, option = "E")+facet_wrap(~band)
     theme_ipsum()+labs(x="Bande",y="Valore px",title="Percentuale per Classe 2021")+theme(legend.position="bottom")+geom_text(aes(label = t1p2), vjust = -0.2, size = 5,
             position = position_dodge(0.9))+scale_size(range=c(0,20000))
