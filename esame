@@ -150,11 +150,11 @@ plot(mndwi_diff, col=cl_diff)
 # NIR-(G+R)/(NIR+(G+R))
 
 # SPECTRAL SIGNATURE
-#CLICK ECCCCC
 plotRGB(lar2013, 5,4,3, stretch="hist")
 click(lar2013,id=T,xy=T,cell=T,type="point",pch=16,cex=4,col="blue")
 #creo le colonne del dataset
 band<-c("B1-C_AEROSOL","B2-BLUE","B3-GREEN","B4-RED","B5-NIR","B6-SWIR_1","B7-SWIR_2","B9-CIRRUS")
+bande<-c("B1","B2","B3","B4","B5","B6","B7","B9")
 # t= time p= pixel d= differenza
 t1p1<-c(11048,	10256,	9911,	7294,	5911,	5367,	5243,	5044)
 t1p2<-c(11946,	11636,	11741,	9119,	6062,	5422,	5293,	5065)
@@ -176,7 +176,7 @@ t2p7<-c(13167,	12928,	12671,	13768,	16310,	17672,	15460,	5086)
 t2p8<-c(13150,	12801,	12739,	13347,	16209,	19414,	17566,	5148)
 t2p9<-c(12756,	12475,	12869,	13830,	16373,	20271,	18193,	5072)
 t2p10<-c(13009,	12871,	13705,	15237,	18538,	22842,	20804,	5100)
-tdp1<-c(6142,	7170,	7622,	10937,	13622,	7759,	3560,	9)
+tdp1<-c(6142,	7170,	7622,	10937,	13622,	7759,	3560,	9)      #DIFFERENZA TRA T2 E T1
 tdp2<-c(6145,	6976,	7190,	10574,	15254,	14252,	9195,	10)
 tdp3<-c(1207,	1466,	1807,	2238,	2812,	10257,	9546,	-3)
 tdp4<-c(867,	837,	70,	1394,	6835,	11662,	7304,	18)
@@ -186,7 +186,7 @@ tdp7<-c(2862,	3579,	4103,	5948,	4837,	9548,	8779,	27)
 tdp8<-c(1722,	1957,	2202,	2812,	149,	2929,	3841,	61)
 tdp9<-c(645,	708,	620,	1082,	-1325,	1607,	2409,	3)
 tdp10<-c(833,	1016,	1617,	2394,	993,	3013,	3359,	-3)
-spectral_s<-data.frame(band, t1p1,	t1p2,	t1p3,	t1p4,	t1p5,	t1p6,	t1p7,	t1p8,	t1p9,	t1p10,	t2p1,	t2p2,	t2p3,	t2p4,	t2p5,	t2p6,	t2p7,	t2p8,	t2p9,	t2p10,	tdp1,	tdp2,	tdp3,	tdp4,	tdp5,	tdp6,	tdp7,	tdp8,	tdp9,	tdp10)
+spectral_s<-data.frame(band,bande, t1p1,	t1p2,	t1p3,	t1p4,	t1p5,	t1p6,	t1p7,	t1p8,	t1p9,	t1p10,	t2p1,	t2p2,	t2p3,	t2p4,	t2p5,	t2p6,	t2p7,	t2p8,	t2p9,	t2p10,	tdp1,	tdp2,	tdp3,	tdp4,	tdp5,	tdp6,	tdp7,	tdp8,	tdp9,	tdp10)
 gg1<-ggplot(spectral_s,aes(x=band,y=t1p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 1 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
 gg2<-ggplot(spectral_s,aes(x=band,y=t2p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 1 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
 gg3<-ggplot(spectral_s,aes(x=band,y=t1p2, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 2 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
@@ -213,13 +213,60 @@ gg19<-ggplot(spectral_s,aes(x=band,y=t1p10, fill=band))+(geom_bar(stat="identity
 gg20<-ggplot(spectral_s,aes(x=band,y=t2p10, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 10 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
 ggarrange(gg15,gg16,gg17,gg18,gg19,gg20, ncol = 2, nrow = 3,common.legend = TRUE)
 
+gg21<-ggplot(spectral_s,aes(x=bande,y=tdp1))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 1 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
+gg22<-ggplot(spectral_s,aes(x=bande,y=tdp2))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 2 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
+gg23<-ggplot(spectral_s,aes(x=bande,y=tdp3))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 3 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
+gg24<-ggplot(spectral_s,aes(x=bande,y=tdp4))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 4 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
+gg25<-ggplot(spectral_s,aes(x=bande,y=tdp5))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 5 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
+gg26<-ggplot(spectral_s,aes(x=bande,y=tdp6))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 6 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
+gg27<-ggplot(spectral_s,aes(x=bande,y=tdp7))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 7 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
+gg28<-ggplot(spectral_s,aes(x=bande,y=tdp8))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 8 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
+gg29<-ggplot(spectral_s,aes(x=bande,y=tdp9))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 9 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
+gg30<-ggplot(spectral_s,aes(x=bande,y=tdp10))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 10 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
+figure <-ggarrange(gg21,gg22,gg23,gg24,gg25,gg26,gg27,gg28,gg29,gg30, ncol = 4, nrow = 3,common.legend = TRUE)
+annotate_figure(figure,
+               top = text_grob("DIFFERENZA TRA FIRME SPETTRALI (2021 - 2013)", color = "black", face = "bold", size = 14),
+               bottom = text_grob("Bande: \n B1 = Cirrus Aerosol,  B2 = Blue,  B3 = Green,  B4 = Red,  B5 = NIR,  B6 = SWIR 1,  B7 = SWIR 2,  B9 = CIRRUS \t\n", color = "blue4",
+               hjust = 1, x = 1, face = "italic", size = 10))
 
 
+#faccio la PCA SD
+lar_ag2013<-aggregate(lar2013, fact=3)
+larpca2013<-rasterPCA(lar_ag2013)
+plot(larpca2013$map)
+summary(larpca2013$model)
+#results:
+#Importance of components:
+#                             Comp.1       Comp.2       Comp.3       Comp.4       Comp.5       Comp.6       Comp.7       Comp.8       Comp.9
+#Standard deviation     2.044360e+04 4.622195e+03 1.695328e+03 9.438722e+02 4.217904e+02 3.816087e+02 2.738330e+02 1.954308e+02 4.956303e+01
+#Proportion of Variance 9.423487e-01 4.817188e-02 6.480440e-03 2.008739e-03 4.011349e-04 3.283474e-04 1.690708e-04 8.611583e-05 5.538762e-06
+#Cumulative Proportion  9.423487e-01 9.905206e-01 9.970011e-01 9.990098e-01 9.994109e-01 9.997393e-01 9.999083e-01 9.999945e-01 1.000000e+00
+#quindi la prima banda spiega il 94,2%, quindi prendo quella
+pc1<-larpca2013$map$PC1
+pc1st3<-focal(pc1, w=matrix(1/9, nrow=3, ncol=3),fun=sd)
+clst<-colorRampPalette(c("cyan","red","yellow","green","black","white"))(150)
+plot(pc1st3, col=clst)
+pc1me3<-focal(pc1, w=matrix(1/9, nrow=3, ncol=3),fun=mean)
+plot(pc1me3, col=clst)
 
-#ggplot(spectral_s,aes(x=band,y=t1p2, fill=band))+(geom_bar(position="dodge",stat="identity", color="black"))+scale_fill_viridis(discrete = T, option = "E")+facet_wrap(~band)
-    theme_ipsum()+labs(x="Bande",y="Valore px",title="Percentuale per Classe 2021")+theme(legend.position="bottom")+geom_text(aes(label = t1p2), vjust = -0.2, size = 5,
-            position = position_dodge(0.9))+scale_size(range=c(0,20000))
-#plottare un hist delle differenze dei time series per pixel
+lar_ag2021<-aggregate(lar2021, fact=3)
+larpca2021<-rasterPCA(lar_ag2021)
+plot(larpca2021$map)
+summary(larpca2021$model)
+#results
+#Importance of components:
+                             Comp.1       Comp.2       Comp.3       Comp.4       Comp.5       Comp.6       Comp.7       Comp.8
+Standard deviation     2.111017e+04 3.969048e+03 1.461680e+03 5.301360e+02 4.000413e+02 3.030508e+02 1.328285e+02 4.849701e+01
+Proportion of Variance 9.602597e-01 3.394516e-02 4.603732e-03 6.055915e-04 3.448378e-04 1.978955e-04 3.801786e-05 5.067983e-06
+Cumulative Proportion  9.602597e-01 9.942049e-01 9.988086e-01 9.994142e-01 9.997590e-01 9.999569e-01 9.999949e-01 1.000000e+00
+#quindi la prima banda spiega il 96%, quindi prendo quella
+pc2<-larpca2021$map$PC1
+pc2st3<-focal(pc2, w=matrix(1/9, nrow=3, ncol=3),fun=sd)
+plot(pc2st3, col=clst)
+pc2me3<-focal(pc2, w=matrix(1/9, nrow=3, ncol=3),fun=mean)
+plot(pc2me3, col=clst)
+
+
 
 _________________________________________________________________________________
 #per plottare con ggplot2 devo rendere il raster un dataframe
@@ -279,39 +326,6 @@ ct<-colorRampPalette(c("blue","white,"red"))(200)
 ndvi_diff<- ndvi2013-ndvi2021
 plot(ndvi_diff, col=ct)
 
-# unsuperClass MNDWI
-
-#greenn2013<-raster("LC08_L1TP_161028_20130506_20170504_01_T1_B3.TIF")
-#swirr2013<-raster("LC08_L1TP_161028_20130506_20170504_01_T1_B6.TIF")
-#mndwii2013<-(greenn2013-swirr2013)/(greenn2013+swirr2013)
-#plot(mndwii2013, col=cl)
-#clas2013<-unsuperClass(mndwii2013, nClasses=4)
-#set.seed(42)
-#class2013<-unsuperClass(mndwii2013, nClasses=4)
-#plot(class2013$map, col=cl)
-#class2013$model #raccolgo il n° di pixel e faccio degli istogrammi
-
-#class2021<-unsuperClass(mndwi2021, nClasses=4)
-#plot(class2021$map)
-#class2021$model #faccio istogrammi per banda e pixel e poi vedo di fare una sottrazione
-
-freq(class2013$map)
-#      value    count
-# [1,]     1 13028955
-# [2,]     2  7815351
-# [3,]     3 14780415
-# [4,]     4  3154471
-# [5,]    NA 16577189
-#s1<-13028955+7815351+14780415+3154471
-#s1
-# [1] 38779192
-#prop1<-(freq(class2013$map)/38779192)*100
-#             value     count
-# [1,] 2.578703e-06 33.597799
-# [2,] 5.157405e-06 20.153465
-# [3,] 7.736108e-06 38.114293
-# [4,] 1.031481e-05  8.134442
-# [5,]           NA 42.747639
 
 pairs(lar2013)
 pairs(lar2021) #faccio la correlazione tra tutte le variabili e plottarle a coppie e vedere quelle che si correlano
