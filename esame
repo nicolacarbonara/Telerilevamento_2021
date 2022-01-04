@@ -243,11 +243,11 @@ summary(larpca2013$model)
 #Cumulative Proportion  9.423487e-01 9.905206e-01 9.970011e-01 9.990098e-01 9.994109e-01 9.997393e-01 9.999083e-01 9.999945e-01 1.000000e+00
 #quindi la prima banda spiega il 94,2%, quindi prendo quella
 pc1<-larpca2013$map$PC1
-pc1st3<-focal(pc1, w=matrix(1/9, nrow=3, ncol=3),fun=sd)
+pc1st5<-focal(pc1, w=matrix(1/25, nrow=5, ncol=5),fun=sd)
 clst<-colorRampPalette(c("cyan","red","yellow","green","black","white"))(150)
-plot(pc1st3, col=clst)
-pc1me3<-focal(pc1, w=matrix(1/9, nrow=3, ncol=3),fun=mean)
-plot(pc1me3, col=clst)
+plot(pc1st5, col=clst)
+pc1me5<-focal(pc1, w=matrix(1/25, nrow=5, ncol=5),fun=mean)
+plot(pc1me5, col=clst)
 
 lar_ag2021<-aggregate(lar2021, fact=3)
 larpca2021<-rasterPCA(lar_ag2021)
@@ -255,16 +255,16 @@ plot(larpca2021$map)
 summary(larpca2021$model)
 #results
 #Importance of components:
-                             Comp.1       Comp.2       Comp.3       Comp.4       Comp.5       Comp.6       Comp.7       Comp.8
-Standard deviation     2.111017e+04 3.969048e+03 1.461680e+03 5.301360e+02 4.000413e+02 3.030508e+02 1.328285e+02 4.849701e+01
-Proportion of Variance 9.602597e-01 3.394516e-02 4.603732e-03 6.055915e-04 3.448378e-04 1.978955e-04 3.801786e-05 5.067983e-06
-Cumulative Proportion  9.602597e-01 9.942049e-01 9.988086e-01 9.994142e-01 9.997590e-01 9.999569e-01 9.999949e-01 1.000000e+00
+#                             Comp.1       Comp.2       Comp.3       Comp.4       Comp.5       Comp.6       Comp.7       Comp.8
+#Standard deviation     2.111017e+04 3.969048e+03 1.461680e+03 5.301360e+02 4.000413e+02 3.030508e+02 1.328285e+02 4.849701e+01
+#Proportion of Variance 9.602597e-01 3.394516e-02 4.603732e-03 6.055915e-04 3.448378e-04 1.978955e-04 3.801786e-05 5.067983e-06
+#Cumulative Proportion  9.602597e-01 9.942049e-01 9.988086e-01 9.994142e-01 9.997590e-01 9.999569e-01 9.999949e-01 1.000000e+00
 #quindi la prima banda spiega il 96%, quindi prendo quella
 pc2<-larpca2021$map$PC1
-pc2st3<-focal(pc2, w=matrix(1/9, nrow=3, ncol=3),fun=sd)
-plot(pc2st3, col=clst)
-pc2me3<-focal(pc2, w=matrix(1/9, nrow=3, ncol=3),fun=mean)
-plot(pc2me3, col=clst)
+pc2st5<-focal(pc2, w=matrix(1/25, nrow=5, ncol=5),fun=sd)
+plot(pc2st5, col=clst)
+pc2me5<-focal(pc2, w=matrix(1/25, nrow=5, ncol=5),fun=mean)
+plot(pc2me5, col=clst)
 
 
 
