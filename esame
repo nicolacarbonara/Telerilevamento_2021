@@ -110,7 +110,7 @@ df2
 diff_perc<-(((df1[3,2])-(df2[2,2]))/df1[3,2])*100
 diff_perc
 # [1] 31.99867  # Percentuale di riduzione dell'area bagnata rispetto al 2013       IN QUESTO CASO, NUMERO CORRETTO MA CLASSI DI VOLTA IN VOLTA DIVERSE
-
+clst<-colorRampPalette(c("cyan","red","yellow","green","black","white"))(150)
 
 # MNDWI 2013
 
@@ -137,14 +137,39 @@ cl_diff<-colorRampPalette(c("darkblue","blue","khaki1","white","black"))(200)
 mndwi_diff<- mndwi2013-mndwi2021
 plot(mndwi_diff, col=cl_diff) 
 
+# NDVI 2013
+
+cs<-colorRampPalette(c("black","green","white","red"))(150)
+nir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B5
+red2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B4
+ndvi2013<-(nir2013-red2013)/(nir2013+red2013)
+plot(ndvi2013, col=cs)
+
+# NDVI 2021
+
+nir2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B5
+red2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B4
+ndvi2021<-(nir2021-red2021)/(nir2021+red2021)
+plot(ndvi2021, col=cs)
+##########trovare una rampPalette idonea
+ct<-colorRampPalette(c("blue","white,"red"))(200)
+# NDVI 2021 - NDVI 2013
+
+ndvi_diff<- ndvi2013-ndvi2021
+plot(ndvi_diff, col=ct)
+ndvi2013_ex<-resample(ndvi2013,ndvi2021,method="bilinear") #ricampiono il ndvi2013 secondo le dim del 2021, con metodo bilineare
+plot(ndvi2021,ndvi2013_ex, maxpixels = 5e+05)
+mm<-stack(ndvi2013_ex,ndvi2021)
+pairs(mm) #da mettere alla fine con tutti gli indici
+
+
+
+#AWEI = 4 * (Green - SWIR2) - (0.25 * NIR + 2.75 * SWIR1)
 # RDI INDICE DI SICCITà
 #swir2/IR
 
 #NDSI INDICE SALINITà
 #swir1-swir2/swir1+swir2
-
-#SI SHAPE INDEX
-#2R-G-B/(G-B)
 
 #GREEN RED NDVI
 # NIR-(G+R)/(NIR+(G+R))
@@ -265,6 +290,7 @@ pc2st5<-focal(pc2, w=matrix(1/25, nrow=5, ncol=5),fun=sd)
 plot(pc2st5, col=clst)
 pc2me5<-focal(pc2, w=matrix(1/25, nrow=5, ncol=5),fun=mean)
 plot(pc2me5, col=clst)
+# da finire????
 
 
 
@@ -305,26 +331,7 @@ ________________________________________________________________________________
 
 
 
-# NDVI 2013
 
-cs<-colorRampPalette(c("black","green","white","red"))(150)
-nir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B5
-red2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B4
-ndvi2013<-(nir2013-red2013)/(nir2013+red2013)
-plot(ndvi2013, col=cs)
-
-# NDVI 2021
-
-nir2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B5
-red2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B4
-ndvi2021<-(nir2021-red2021)/(nir2021+red2021)
-plot(ndvi2021, col=cs)
-##########trovare una rampPalette idonea
-ct<-colorRampPalette(c("blue","white,"red"))(200)
-# NDVI 2021 - NDVI 2013
-
-ndvi_diff<- ndvi2013-ndvi2021
-plot(ndvi_diff, col=ct)
 
 
 pairs(lar2013)
@@ -369,4 +376,4 @@ _______________________________________________________________________________
 
 
 
-#credit: indexdatabase.de
+#credit: indexdatabase.de, dea.lib.unideb.hu:2437/230928
