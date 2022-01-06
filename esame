@@ -134,8 +134,10 @@ plot(mndwi2021, col=cl)
 # MNDWI 2021 - MNDWI 2013 per le acque
 
 cl_diff<-colorRampPalette(c("darkblue","blue","khaki1","white","black"))(200)
-mndwi_diff<- mndwi2013-mndwi2021
+mndwi2013_ex<-resample(mndwi2013,mndwi2021,method="bilinear") #ricampiono il ndvi2013 secondo le dim del 2021, con metodo bilineare
+mndwi_diff<- mndwi2013_ex-mndwi2021
 plot(mndwi_diff, col=cl_diff) 
+plot(mndwi2021, mndwi2013_ex,col=ct)
 
 # NDVI 2013
 
@@ -152,27 +154,65 @@ red2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B4
 ndvi2021<-(nir2021-red2021)/(nir2021+red2021)
 plot(ndvi2021, col=cs)
 ##########trovare una rampPalette idonea
-ct<-colorRampPalette(c("blue","white,"red"))(200)
+ct<-colorRampPalette(c("darkblue","blue","white","red"))(150)
+
 # NDVI 2021 - NDVI 2013
 
-ndvi_diff<- ndvi2013-ndvi2021
-plot(ndvi_diff, col=ct)
 ndvi2013_ex<-resample(ndvi2013,ndvi2021,method="bilinear") #ricampiono il ndvi2013 secondo le dim del 2021, con metodo bilineare
+ndvi_diff<- ndvi2013_ex-ndvi2021
+plot(ndvi_diff, col=ct)
 plot(ndvi2021,ndvi2013_ex, maxpixels = 5e+05)
-mm<-stack(ndvi2013_ex,ndvi2021)
+#mm<-stack(ndvi2013_ex,ndvi2021)
+#pairs(mm) #da mettere alla fine con tutti gli indici
+
+#AWEI 2013
+swir22013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B7
+awei2013<-(4*(green2013-swir22013))-(0.25*nir2013)+(2.75*swir2013)
+plot(awei2013, col=ct)
+
+#AWEI 2021
+swir22021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B7
+awei2021<-(4*(green2021-swir22021))-(0.25*nir2021)+(2.75*swir2021)
+plot(awei2021, col=ct)
+plot(awei2021,awei2013_ex, maxpixels = 5e+05)
+
+# AWEI 2021 - 2013
+awei2013_ex<-resample(awei2013,awei2021,method="bilinear")
+awei_diff<- awei2013_ex-awei2021
+plot(awei_diff, col=ct)
+plot(awei2021,awei2013_ex, maxpixels = 5e+05)
+
+# NDSI 2013 indice salinità
+ndsi2013<-(swir2013-swir22013)/(swir2013+swir22013)
+plot(ndsi2013, col=ct)
+
+# NDSI 2021
+ndsi2021<-(swir2021-swir22021)/(swir2021+swir22021)
+plot(ndsi2021, col=ct)
+
+# NDSI 2021 - 2013
+ndsi2013_ex<-resample(ndsi2013,ndsi2021,method="bilinear")
+ndsi_diff<- ndsi2013_ex-ndsi2021
+plot(ndsi_diff, col=ct)
+plot(ndsi2021,ndsi2013_ex, maxpixels = 5e+05)
+
+# NRDI 2013 INDICE DI SICCITà
+rdi2013<-swir22013-nir2013/swir22013+nir2013
+plot(rdi2013, col=ct)
+
+# NRDI 2021
+rdi2021<-swir22021-nir2021/swir22021+nir2021
+plot(rdi2021, col=ct)
+
+# NRDI 2021 - 2013
+rdi2013_ex<-resample(rdi2013,rdi2021,method="bilinear")
+rdi_diff<- rdi2013_ex-rdi2021
+plot(rdi_diff, col=ct)
+plot(rdi2021,rdi2013_ex, maxpixels = 5e+05)
+
+mm<-stack(mndwi_diff, ndvi_diff, awei_diff,ndsi_diff,rdi_diff)
+plot(mm, col=cs)
 pairs(mm) #da mettere alla fine con tutti gli indici
-
-
-
-#AWEI = 4 * (Green - SWIR2) - (0.25 * NIR + 2.75 * SWIR1)
-# RDI INDICE DI SICCITà
-#swir2/IR
-
-#NDSI INDICE SALINITà
-#swir1-swir2/swir1+swir2
-
-#GREEN RED NDVI
-# NIR-(G+R)/(NIR+(G+R))
 
 # SPECTRAL SIGNATURE
 plotRGB(lar2013, 5,4,3, stretch="hist")
@@ -327,25 +367,9 @@ ndvi
 ggR(ndvi, geom_raster = TRUE) +
         scale_fill_gradientn(colours = c("black", "white")) 
 ____________________________________________________________________________________
-
-
-
-
-
-
-
-pairs(lar2013)
-pairs(lar2021) #faccio la correlazione tra tutte le variabili e plottarle a coppie e vedere quelle che si correlano
-
-
-
 # per associare l'immagine da 20 m a 10 m uso aggregate con fattore=2
 # esempio 
 # bbq<-aggregate(immagine_grande, fact=2)
-
-
-
-
 __________________________________________________________________________
 olpar <- par(no.readonly = TRUE) # back-up par
 par(mfrow=c(1,2))
