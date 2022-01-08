@@ -196,23 +196,31 @@ ndsi_diff<- ndsi2013_ex-ndsi2021
 plot(ndsi_diff, col=ct)
 plot(ndsi2021,ndsi2013_ex, maxpixels = 5e+05)
 
-# NRDI 2013 INDICE DI SICCITà
-rdi2013<-swir22013-nir2013/swir22013+nir2013
-plot(rdi2013, col=ct)
+# RDI 2013 INDICE DI SICCITà
+rdi2013<-swir22013/nir2013
+rdi2013N<-rdi2013/maxValue(rdi2013)
+plot(rdi2013N, col=ct)
 
-# NRDI 2021
-rdi2021<-swir22021-nir2021/swir22021+nir2021
-plot(rdi2021, col=ct)
+# RDI 2021
+rdi2021<-swir22021/nir2021
+rdi2021N<-rdi2021/maxValue(rdi2021)
+plot(rdi2021N, col=ct)
 
-# NRDI 2021 - 2013
-rdi2013_ex<-resample(rdi2013,rdi2021,method="bilinear")
-rdi_diff<- rdi2013_ex-rdi2021
+# RDI 2021 - 2013
+rdi2013N_ex<-resample(rdi2013N,rdi2021N,method="bilinear")
+rdi_diff<- rdi2013N_ex-rdi2021N
 plot(rdi_diff, col=ct)
-plot(rdi2021,rdi2013_ex, maxpixels = 5e+05)
+plot(rdi2021N,rdi2013N_ex, maxpixels = 5e+05)
 
 mm<-stack(mndwi_diff, ndvi_diff, awei_diff,ndsi_diff,rdi_diff)
 plot(mm, col=cs)
 pairs(mm) #da mettere alla fine con tutti gli indici
+
+var<-stack(mndwi_diff, ndvi_diff)
+varpca<-rasterPCA(var)
+summary(varpcs$model)
+varpcaN<-varpca$map$PC1/maxValue(varpca$map$PC1)
+plot(varpcaN,col=cl)
 
 # SPECTRAL SIGNATURE
 plotRGB(lar2013, 5,4,3, stretch="hist")
