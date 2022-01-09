@@ -66,10 +66,10 @@ clasimm2013<-unsuperClass(lar2013, nClasses=4)
 plot(clasimm2013$map, col=cl) #si vedono le aree bagnate
 freq(clasimm2013$map)       
 df1<-data.frame(freq(clasimm2013$map)) #creo un piccolo dataframe con i pixel categorizzati
-sum2013<-sum(df1$count) #sommp tutta la colonna dei count
+sum2013<-sum(df1$count) #sommo tutta la colonna dei count
 df1$perc_2013<-(df1$count/sum2013)*100 #aggiungo un vettore interno al dataframe con le percentuali del 2013
-rownames(df1)<-c("classe_1","classe_2","classe_3","classe_4") #ho rinominato le righe
-colnames(df1)<-c("classe","count","perc_2013") #ho rinominato le colonne
+rownames(df1)<-c("classe_1","classe_2","classe_3","classe_4") #rinomino le righe
+colnames(df1)<-c("classe","count","perc_2013") #rinomino le colonne
 #df1<-data.frame(classe=df1$value,perc_2013=df1$percentuale2013) #aggiorno il dataframe con solo le info che mi servono
 df1$classe<-c("Classe 1","Classe 2","Classe 3", "Classe 4")
 p9<-ggplot(df1,aes(x=classe,y=perc_2013, fill=classe))+(geom_bar(stat="identity", color="black"))+labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2013")+theme(legend.position="bottom")
@@ -110,6 +110,7 @@ df2
 diff_perc<-(((df1[3,2])-(df2[2,2]))/df1[3,2])*100
 diff_perc
 # [1] 31.99867  # Percentuale di riduzione dell'area bagnata rispetto al 2013       IN QUESTO CASO, NUMERO CORRETTO MA CLASSI DI VOLTA IN VOLTA DIVERSE
+
 clst<-colorRampPalette(c("cyan","red","yellow","green","black","white"))(150)
 
 # MNDWI 2013
