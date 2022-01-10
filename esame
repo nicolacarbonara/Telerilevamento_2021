@@ -113,7 +113,31 @@ diff_perc
 
 clst<-colorRampPalette(c("cyan","red","yellow","green","black","white"))(150)
 
-# MNDWI 2013
+# ndwi2013 normalized difference water index 2013
+
+green2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B3
+nir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B5
+ndwi2013<-(green2013-nir2013)/(green2013+nir2013)
+cl<-colorRampPalette(c("darkblue","yellow","red","black"))(150)
+plot(ndwi2013, col=cl)
+
+# ndwi 2021
+
+green2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B3
+nir2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B5
+ndwi2021<-(green2021-nir2021)/(green2021+nir2021)
+cl<-colorRampPalette(c("darkblue","yellow","red","black"))(150)
+plot(ndwi2021, col=cl)
+
+# ndwi 2021-ndwi2013 per le acque
+
+cl_diff<-colorRampPalette(c("darkblue","blue","khaki1","white","black"))(200)
+ndwi2013_ex<-resample(ndwi2013,ndwi2021,method="bilinear") #ricampiono il ndvi2013 secondo le dim del 2021, con metodo bilineare
+ndwi_diff<- ndwi2013_ex-ndwi2021
+plot(ndwi_diff, col=cl_diff) 
+plot(ndwi2021, ndwi2013_ex,col=ct)
+
+# MNDWI 2013 Modification of normalized difference water index 
 
 green2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B3
 swir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B6
@@ -166,7 +190,7 @@ plot(ndvi2021,ndvi2013_ex, maxpixels = 5e+05)
 #mm<-stack(ndvi2013_ex,ndvi2021)
 #pairs(mm) #da mettere alla fine con tutti gli indici
 
-#AWEI 2013
+#AWEI 2013 automated water extraction index
 swir22013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B7
 awei2013<-(4*(green2013-swir22013))-(0.25*nir2013)+(2.75*swir2013)
 plot(awei2013, col=ct)
@@ -175,7 +199,6 @@ plot(awei2013, col=ct)
 swir22021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B7
 awei2021<-(4*(green2021-swir22021))-(0.25*nir2021)+(2.75*swir2021)
 plot(awei2021, col=ct)
-plot(awei2021,awei2013_ex, maxpixels = 5e+05)
 
 # AWEI 2021 - 2013
 awei2013_ex<-resample(awei2013,awei2021,method="bilinear")
@@ -183,21 +206,7 @@ awei_diff<- awei2013_ex-awei2021
 plot(awei_diff, col=ct)
 plot(awei2021,awei2013_ex, maxpixels = 5e+05)
 
-# NDSI 2013 indice salinità
-ndsi2013<-(swir2013-swir22013)/(swir2013+swir22013)
-plot(ndsi2013, col=ct)
-
-# NDSI 2021
-ndsi2021<-(swir2021-swir22021)/(swir2021+swir22021)
-plot(ndsi2021, col=ct)
-
-# NDSI 2021 - 2013
-ndsi2013_ex<-resample(ndsi2013,ndsi2021,method="bilinear")
-ndsi_diff<- ndsi2013_ex-ndsi2021
-plot(ndsi_diff, col=ct)
-plot(ndsi2021,ndsi2013_ex, maxpixels = 5e+05)
-
-# RDI 2013 INDICE DI SICCITà
+# RDI 2013 INDICE DI SICCITà Ratio Drought Index
 rdi2013<-swir22013/nir2013
 rdi2013N<-rdi2013/maxValue(rdi2013)
 plot(rdi2013N, col=ct)
@@ -213,13 +222,11 @@ rdi_diff<- rdi2013N_ex-rdi2021N
 plot(rdi_diff, col=ct)
 plot(rdi2021N,rdi2013N_ex, maxpixels = 5e+05)
 
-mm<-stack(mndwi_diff, ndvi_diff, awei_diff,ndsi_diff,rdi_diff)
-plot(mm, col=cs)
-pairs(mm) #da mettere alla fine con tutti gli indici
-
-var<-stack(mndwi_diff, ndvi_diff)
-varpca<-rasterPCA(var)
-summary(varpcs$model)
+box<-stack(mndwi_diff, ndwi_diff, awei_diff)
+plot(box, col=cs)
+pairs(box) #da mettere alla fine con tutti gli indici
+varpca<-rasterPCA(box)
+summary(varpca$model)
 varpcaN<-varpca$map$PC1/maxValue(varpca$map$PC1)
 plot(varpcaN,col=cl)
 
@@ -410,3 +417,4 @@ _______________________________________________________________________________
 
 
 #credit: indexdatabase.de, dea.lib.unideb.hu:2437/230928
+#Mustafa Mustafa T., Hassoon Khalid I., Hassan Modher and Abd Modher H. "Using water indices (NDWI, MNDWI, NDMI, WRI and AWEI) to detect physical and chemical parameters by apply remote sensing and GIS techniques". International Journal of Research - Granthaalayah 5, no. 10 (2017): 117-128.
