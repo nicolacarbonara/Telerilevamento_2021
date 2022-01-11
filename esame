@@ -166,20 +166,21 @@ plot(mndwi2021, mndwi2013_ex,col=ct)
 
 # NDVI 2013
 
-cs<-colorRampPalette(c("black","green","white","red"))(150)
+cs<-colorRampPalette(c("chartreuse3","white","red4"))(200)
 nir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B5
 red2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B4
 ndvi2013<-(nir2013-red2013)/(nir2013+red2013)
-plot(ndvi2013, col=cs)
+
 
 # NDVI 2021
 
 nir2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B5
 red2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B4
 ndvi2021<-(nir2021-red2021)/(nir2021+red2021)
-plot(ndvi2021, col=cs)
-##########trovare una rampPalette idonea
 ct<-colorRampPalette(c("darkblue","blue","white","red"))(150)
+par(mfrow=c(1,2))
+plot(ndvi2013, col=cs, main="2013")
+plot(ndvi2021, col=cs,main="2021")
 
 # NDVI 2021 - NDVI 2013
 
@@ -187,18 +188,17 @@ ndvi2013_ex<-resample(ndvi2013,ndvi2021,method="bilinear") #ricampiono il ndvi20
 ndvi_diff<- ndvi2013_ex-ndvi2021
 plot(ndvi_diff, col=ct)
 plot(ndvi2021,ndvi2013_ex, maxpixels = 5e+05)
-#mm<-stack(ndvi2013_ex,ndvi2021)
-#pairs(mm) #da mettere alla fine con tutti gli indici
 
 #AWEI 2013 automated water extraction index
 swir22013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B7
 awei2013<-(4*(green2013-swir22013))-(0.25*nir2013)+(2.75*swir2013)
-plot(awei2013, col=ct)
 
 #AWEI 2021
 swir22021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B7
 awei2021<-(4*(green2021-swir22021))-(0.25*nir2021)+(2.75*swir2021)
-plot(awei2021, col=ct)
+par(mfrow=c(1,2))
+plot(awei2013, col=ct, main="2013")
+plot(awei2021, col=ct, main="2021")
 
 # AWEI 2021 - 2013
 awei2013_ex<-resample(awei2013,awei2021,method="bilinear")
@@ -207,26 +207,34 @@ plot(awei_diff, col=ct)
 plot(awei2021,awei2013_ex, maxpixels = 5e+05)
 
 # RDI 2013 INDICE DI SICCITà Ratio Drought Index
-rdi2013<-swir22013/nir2013
-rdi2013N<-rdi2013/maxValue(rdi2013)
-plot(rdi2013N, col=ct)
+#rdi2013<-swir22013/nir2013
+#rdi2013N<-rdi2013/maxValue(rdi2013)
+#plot(rdi2013N, col=ct)
 
 # RDI 2021
-rdi2021<-swir22021/nir2021
-rdi2021N<-rdi2021/maxValue(rdi2021)
-plot(rdi2021N, col=ct)
+#rdi2021<-swir22021/nir2021
+#rdi2021N<-rdi2021/maxValue(rdi2021)
+#plot(rdi2021N, col=ct)
 
 # RDI 2021 - 2013
-rdi2013N_ex<-resample(rdi2013N,rdi2021N,method="bilinear")
-rdi_diff<- rdi2013N_ex-rdi2021N
-plot(rdi_diff, col=ct)
-plot(rdi2021N,rdi2013N_ex, maxpixels = 5e+05)
+#rdi2013N_ex<-resample(rdi2013N,rdi2021N,method="bilinear")
+#rdi_diff<- rdi2013N_ex-rdi2021N
+#plot(rdi_diff, col=ct)
+#plot(rdi2021N,rdi2013N_ex, maxpixels = 5e+05)
 
 box<-stack(mndwi_diff, ndwi_diff, awei_diff)
 plot(box, col=cs)
 pairs(box) #da mettere alla fine con tutti gli indici
 varpca<-rasterPCA(box)
 summary(varpca$model)
+#Importance of components:
+#                         Comp.1       Comp.2       Comp.3
+#Standard deviation     8840.392 1.310433e-01 4.376372e-02
+#Proportion of Variance    1.000 2.197287e-10 2.450673e-11
+#Cumulative Proportion     1.000 1.000000e+00 1.000000e+00
+# La prima banda spiega il 100%
+
+#associo ad una variabile la mappa normalizzata al suo max valore
 varpcaN<-varpca$map$PC1/maxValue(varpca$map$PC1)
 plot(varpcaN,col=cl)
 
@@ -416,7 +424,7 @@ _______________________________________________________________________________
 
 
 
-#credit: indexdatabase.de, dea.lib.unideb.hu:2437/230928
+#references: indexdatabase.de, dea.lib.unideb.hu:2437/230928
 #Mustafa Mustafa T., Hassoon Khalid I., Hassan Modher and Abd Modher H. "Using water indices (NDWI, MNDWI, NDMI, WRI and AWEI) to detect physical and chemical parameters by apply remote sensing and GIS techniques". International Journal of Research - Granthaalayah 5, no. 10 (2017): 117-128.
-#Reference: Xu, H. "Modification of Normalised Difference Water Index (NDWI) to Enhance Open Water Features in Remotely Sensed Imagery." International Journal of Remote Sensing 27, No. 14 (2006): 3025-3033." (ESRI, 2018)
-Reference: Xu, H. "Modification of Normalised Difference Water Index (NDWI) to Enhance Open Water Features in Remotely Sensed Imagery." International Journal of Remote Sensing 27, No. 14 (2006): 3025-3033." (ESRI, 2018)
+#Xu, H. "Modification of Normalised Difference Water Index (NDWI) to Enhance Open Water Features in Remotely Sensed Imagery." International Journal of Remote Sensing 27, No. 14 (2006): 3025-3033." (ESRI, 2018)
+#AWEI Feyisa, G.L.; Meilby, H.; Fensholt, R.; Proud, S.R. Automated water extraction index: A new technique for surface water mapping using Landsat imagery. Remote Sens. Environ. 2014, 140, 23–35.
