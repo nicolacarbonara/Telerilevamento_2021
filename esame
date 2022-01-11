@@ -145,9 +145,6 @@ mndwi2013<-(green2013-swir2013)/(green2013+swir2013)
 cl<-colorRampPalette(c("darkblue","yellow","red","black"))(150)
 plot(mndwi2013, col=cl)
 
-# valori da 
-#mndwisd<-focal(mndwi, w=matrix(1/9,nrow=3,ncol=3),fun=sd)
-
 # MNDWI 2021
 
 green2021<-lar2021$LC08_L1TP_161028_20210512_20210524_01_T1_B3
@@ -205,22 +202,6 @@ awei2013_ex<-resample(awei2013,awei2021,method="bilinear")
 awei_diff<- awei2013_ex-awei2021
 plot(awei_diff, col=ct)
 plot(awei2021,awei2013_ex, maxpixels = 5e+05)
-
-# RDI 2013 INDICE DI SICCITà Ratio Drought Index
-#rdi2013<-swir22013/nir2013
-#rdi2013N<-rdi2013/maxValue(rdi2013)
-#plot(rdi2013N, col=ct)
-
-# RDI 2021
-#rdi2021<-swir22021/nir2021
-#rdi2021N<-rdi2021/maxValue(rdi2021)
-#plot(rdi2021N, col=ct)
-
-# RDI 2021 - 2013
-#rdi2013N_ex<-resample(rdi2013N,rdi2021N,method="bilinear")
-#rdi_diff<- rdi2013N_ex-rdi2021N
-#plot(rdi_diff, col=ct)
-#plot(rdi2021N,rdi2013N_ex, maxpixels = 5e+05)
 
 box<-stack(mndwi_diff, ndwi_diff, awei_diff)
 plot(box, col=cs)
@@ -317,109 +298,6 @@ annotate_figure(figure,
                top = text_grob("DIFFERENZA TRA FIRME SPETTRALI (2021 - 2013)", color = "black", face = "bold", size = 14),
                bottom = text_grob("Bande: \n B1 = Cirrus Aerosol,  B2 = Blue,  B3 = Green,  B4 = Red,  B5 = NIR,  B6 = SWIR 1,  B7 = SWIR 2,  B9 = CIRRUS \t\n", color = "blue4",
                hjust = 1, x = 1, face = "italic", size = 10))
-
-
-#faccio la PCA SD
-lar_ag2013<-aggregate(lar2013, fact=3)
-larpca2013<-rasterPCA(lar_ag2013)
-plot(larpca2013$map)
-summary(larpca2013$model)
-#results:
-#Importance of components:
-#                             Comp.1       Comp.2       Comp.3       Comp.4       Comp.5       Comp.6       Comp.7       Comp.8       Comp.9
-#Standard deviation     2.044360e+04 4.622195e+03 1.695328e+03 9.438722e+02 4.217904e+02 3.816087e+02 2.738330e+02 1.954308e+02 4.956303e+01
-#Proportion of Variance 9.423487e-01 4.817188e-02 6.480440e-03 2.008739e-03 4.011349e-04 3.283474e-04 1.690708e-04 8.611583e-05 5.538762e-06
-#Cumulative Proportion  9.423487e-01 9.905206e-01 9.970011e-01 9.990098e-01 9.994109e-01 9.997393e-01 9.999083e-01 9.999945e-01 1.000000e+00
-#quindi la prima banda spiega il 94,2%, quindi prendo quella
-pc1<-larpca2013$map$PC1
-pc1st5<-focal(pc1, w=matrix(1/25, nrow=5, ncol=5),fun=sd)
-clst<-colorRampPalette(c("cyan","red","yellow","green","black","white"))(150)
-plot(pc1st5, col=clst)
-pc1me5<-focal(pc1, w=matrix(1/25, nrow=5, ncol=5),fun=mean)
-plot(pc1me5, col=clst)
-
-lar_ag2021<-aggregate(lar2021, fact=3)
-larpca2021<-rasterPCA(lar_ag2021)
-plot(larpca2021$map)
-summary(larpca2021$model)
-#results
-#Importance of components:
-#                             Comp.1       Comp.2       Comp.3       Comp.4       Comp.5       Comp.6       Comp.7       Comp.8
-#Standard deviation     2.111017e+04 3.969048e+03 1.461680e+03 5.301360e+02 4.000413e+02 3.030508e+02 1.328285e+02 4.849701e+01
-#Proportion of Variance 9.602597e-01 3.394516e-02 4.603732e-03 6.055915e-04 3.448378e-04 1.978955e-04 3.801786e-05 5.067983e-06
-#Cumulative Proportion  9.602597e-01 9.942049e-01 9.988086e-01 9.994142e-01 9.997590e-01 9.999569e-01 9.999949e-01 1.000000e+00
-#quindi la prima banda spiega il 96%, quindi prendo quella
-pc2<-larpca2021$map$PC1
-pc2st5<-focal(pc2, w=matrix(1/25, nrow=5, ncol=5),fun=sd)
-plot(pc2st5, col=clst)
-pc2me5<-focal(pc2, w=matrix(1/25, nrow=5, ncol=5),fun=mean)
-plot(pc2me5, col=clst)
-# da finire????
-
-
-
-_________________________________________________________________________________
-#per plottare con ggplot2 devo rendere il raster un dataframe
-mndwidif2<-aggregate(mndwi_diff, fact=3)
-mdf2 <- rasterToPoints(mndwidif2)
-mdf2 <- data.frame(mdf2)
-colnames(mdf2) <- c("X","Y","mndwidif2")
-b.m2 <- seq(min(mdf2$mndwidif2),max(mdf2$mndwidif2),length.out=100)
-ggplot(mdf2,aes(X,Y))+geom_raster(aes(x=X,y=Y,fill=mndwidif2),hjust=0.5,vjust=0.5,interpolate=F)
-ggplot(hdf)+
-  geom_raster(data=ddf,aes(X,Y,fill=DEM))+
-  scale_fill_gradientn(name="Altitude",colours = rainbow(20))+
-  guides(fill = guide_colorbar()) +
-  geom_tile(aes(X,Y,alpha=Hill), fill = "grey20") +
-  scale_alpha(range = c(0, 0.5)) +
-  scale_x_continuous(name=expression(paste("Longitude (",degree,")")),
-    limits=c(-4,2),expand=c(0,0)) +
-  scale_y_continuous(name=expression(paste("Latitude (",degree,")")),
-    limits=c(4,12),expand=c(0,0)) +
-  coord_equal()
-
-
-mdf <- rasterToPoints(mndwi_diff)
-mdf <- data.frame(mdf)
-colnames(mdf) <- c("X","Y","mndwidif")
-b.m <- seq(min(mdf$mndwidif),max(mdf$mndwidif),length.out=100)
-ggplot(mdf,aes(X,Y))+geom_raster(aes(x=X,y=Y,fill=mndwidif),hjust=0.5,vjust=0.5,interpolate=F)
-
-## Calculate NDVI
-ndvi <- spectralIndices(lsat, red = "B3_dn", nir = "B4_dn", indices = "NDVI")
-ndvi
-ggR(ndvi, geom_raster = TRUE) +
-        scale_fill_gradientn(colours = c("black", "white")) 
-____________________________________________________________________________________
-# per associare l'immagine da 20 m a 10 m uso aggregate con fattore=2
-# esempio 
-# bbq<-aggregate(immagine_grande, fact=2)
-__________________________________________________________________________
-olpar <- par(no.readonly = TRUE) # back-up par
-par(mfrow=c(1,2))
-colors <- rainbow(5)
-plot(clas$map, col = colors, legend = FALSE, axes = FALSE, box = FALSE)
-legend(1,1, legend = paste0("C",1:5), fill = colors,
-       title = "Classes", horiz = TRUE,  bty = "n")
-par(olpar)
-
-
-larqa2013<-raster("LC08_L1TP_161028_20130506_20170504_01_T1_BQA.TIF")
-classifyQA(larqa2013, type = c("background", "cloud", "cirrus", "snow",
-  "water"), confLayers = T, sensor = "OLI",
-  legacy = "collection1")
-  
-
-encodeQA(fill = "no", terrainOcclusion = "no", radSaturation = "na",
-  cloudMask = "all", cloud = "all", cloudShadow = "all",
-  snow = "all", cirrus = "all", droppedPixel = "no", water = "all",
-  droppedFrame = "no", sensor = "OLI", legacy = "collection1")
-  
-  
-ggRGB(mndwii2013, r = 3, g = 2, b = 1, scale, maxpixels = 5e+05,
-  stretch = "none")
-_______________________________________________________________________________
-
 
 
 
