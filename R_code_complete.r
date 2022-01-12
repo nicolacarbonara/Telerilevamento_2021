@@ -319,25 +319,25 @@ grid.arrange(p1, p2, nrow = 2) # this needs gridExtra #con grid extra accorpo i 
 # 8. R code Vegetation Indices
 
 # R_code_vegetation_indices
-library(raster) #require(raster)
+library(raster) #require(raster) #carico i pacchetti necessari
 library(RStoolbox)
 library(rasterdiv)
 library(rasterVis)
-setwd("C:/lab/")
+setwd("C:/lab/") #set della cartella di lavoro
 
 
-defor1 <- brick("defor1.jpg")
+defor1 <- brick("defor1.jpg") #carico con brick il file e lo associo ad un oggetto
 defor2 <- brick("defor2.jpg")
 # b1=nir, b2=r, b3=g
-par(mfrow=c(2,1))
+par(mfrow=c(2,1)) #faccio un multiframe 
 plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
 plotRGB(defor2, r=1, g=2, b=3, stretch="lin")
-dvi1<-defor1$defor1.1-defor1$defor1.2 #calcolo l'indice di vegetazione
+dvi1<-defor1$defor1.1-defor1$defor1.2 #calcolo l'indice di vegetazione- con $ prendo il sottoinsieme indicato
 plot(dvi1)
 dvi1norm<-(defor1$defor1.1-defor1$defor1.2)/(defor1$defor1.1+defor1$defor1.2) #dvi normalizzato (NIR-RED)/(NIR+RED)
 cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) # specifying a color scheme
 plot(dvi1norm, col=cl)
-plot(dvi1norm, col=cl, main="DVI at time 1") #assegno un titolo
+plot(dvi1norm, col=cl, main="DVI at time 1") #con main assegno un titolo
 dvi2norm<-(defor2$defor2.1-defor2$defor2.2)/(defor2$defor2.1+defor2$defor2.2) #1 vegetazione sana, -1 vegetazione pessima
 plot(dvi2norm, col=cl, main="DVI at time 2")
 par(mfrow=c(1,2))
@@ -370,16 +370,16 @@ levelplot(copNDVI)
 
 # R_code_land_cover.r
 library(raster) #require(raster)
-library(RStoolbox)
+library(RStoolbox) #carico i pacchetti necessari
 library(ggplot2)
-setwd("C:/lab/")
+setwd("C:/lab/") #set della cartella di lavoro
 
-defor1<-brick("defor1.jpg") #carico il file defor1.jpg
-plotRGB(defor1, r=1, g=2, b=3, stretch="Lin")
-ggRGB(defor1, r=1, g=2, b=3, stretch="Lin")
+defor1<-brick("defor1.jpg") #carico il file defor1.jpg e l'associo a defor1
+plotRGB(defor1, r=1, g=2, b=3, stretch="Lin") #plot RGB con le bande red=1 green=2, blue=3
+ggRGB(defor1, r=1, g=2, b=3, stretch="Lin") #plot RGB con ggplot
 defor2<-brick("defor2.jpg") #carico il file defor2.jpg
 ggRGB(defor2, r=1, g=2, b=3, stretch="Lin")
-par(mfrow=c(1,2))
+par(mfrow=c(1,2)) #faccio un multiframe 1x2
 ggRGB(defor1, r=1, g=2, b=3, stretch="Lin")
 ggRGB(defor2, r=1, g=2, b=3, stretch="Lin")
 
@@ -391,13 +391,13 @@ p2<-ggRGB(defor2, r=1, g=2, b=3, stretch="Lin")
 grid.arrange(p1, p2, nrow=2)
 
 #unsupervised classification
-d1c<- unsuperClass(defor1, nClasses=2)
+d1c<- unsuperClass(defor1, nClasses=2) #associo il prodotto della funzione unsuperClass ad un oggetto
 d2c<- unsuperClass(defor2, nClasses=2)
 # set.seed(43) would allow you to attain the same results
 # class 1: agricolture
 # class 2: forest
 # forest soil loss and pixels frequency 
-freq(d1c$map)
+freq(d1c$map) #mi fa vedere la conta dei pixel categorizzati
  #value  count
 #[1,]     1  35373
 #[2,]     2 305919
@@ -414,14 +414,14 @@ prop2<- freq(d2c$map)/s2 #foresta 52.1% agricoltura 47.9%
 pecentagescover <- c("Forest","Agriculture")
 percent_1992 <- c(89.83, 10.16)
 percent_2006 <- c(52.06, 47.93)  
-percentages <- data.frame(cover, percent_1992, percent_2006)
+percentages <- data.frame(cover, percent_1992, percent_2006) #creo il dataframe con i vettori sopra definiti
 percentages
 #grafico con ggplot2
-ggplot(percentages, aes(x=cover, y=percent_1992, color=cover))+geom_bar(stat="identity", fill="red")
+ggplot(percentages, aes(x=cover, y=percent_1992, color=cover))+geom_bar(stat="identity", fill="red") #geom_bar definisce il tipo di grafico, aes le coordinate, fill il colore di riempimento o anche il criterio di colore
 ggplot(percentages, aes(x=cover, y=percent_2006, color=cover))+geom_bar(stat="identity", fill="cyan")
 graf1<-ggplot(percentages, aes(x=cover, y=percent_1992, color=cover))+geom_bar(stat="identity", fill="red") #aes = aestetics
 graf2<-ggplot(percentages, aes(x=cover, y=percent_2006, color=cover))+geom_bar(stat="identity", fill="cyan")
-grid.arrange(graf1, graf2, nrow=2)
+grid.arrange(graf1, graf2, nrow=2) #unisce i due grafici in una figura
 
 #------------------------------------------------------------------------
 
@@ -430,23 +430,24 @@ grid.arrange(graf1, graf2, nrow=2)
 # variabilità del paesaggio, mappe di variabilità ecc
 
 # R_code_variability.r
-library(raster)
+library(raster) #carico i pacchetti richiesti
 library(RStoolbox)
 library(viridis)
 library(gridExtra)
 library(ggplot2)
-setwd("C:/lab/")
-sent<-brick("sentinel.png")
+setwd("C:/lab/") #set della cartella di lavoro
+sent<-brick("sentinel.png") #carico tutte le bande del file sentinel.png
 #plotto con le bande NIR 1, red 2, green 3, 
 # r=1, g=2, b=3
 plotRGB(sent)
-nir<-sent$sentilel.1
+nir<-sent$sentilel.1 #associo un sottoinsieme di "sent" (una banda specifica) ad un oggetto "nir"
 red<-sent$sentinel.2
 green<-sent$sentinel.3
 ndvi<-(nir-red)/(nir+red)
 plot(ndvi)
 #utilizzo la funzione "focal" che utilizza la moving window
 ndvisd3<-focal(ndvi, w=matrix(1/9,nrow=3, ncol=3), fun=sd) #w=window, ovvero la matrice 3 x 3 #fun= function, sd= deviazione standard
+#con la finestra mobile calcolo la funzione richiesta all'interno di tale finestra
 clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) #
 plot(ndvisd3, col=clsd)
 #cambio la dimensione della finestra mobile
@@ -459,12 +460,12 @@ clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red
 plot(ndvisd5, col=clsd)
 #calcoliamo la pca e usiamo solo la componente principale
 sentpca<-rasterPCA(sent)
-plot(sentpca$map)
-summary(sentpca$model)
+plot(sentpca$map) #plot della mappa contenuta del sentpca
+summary(sentpca$model) #faccio un sommario (indica i contenuti riassunti)
 #the first pc explain 67.36804% of the original information
 pc1<-sentpca$map$PC1
 pc1st5<-focal(pc1,w=matrix(1/25, nrow=5, ncol=5), fun=sd)
-clst<-colorRampPalette(c('blue', 'red', 'yellow', 'green', 'black'))(150)
+clst<-colorRampPalette(c('blue', 'red', 'yellow', 'green', 'black'))(150) #definisco una nuova palette con 150 gradi di sfumatura tra un colore e l'altro
 plot(pc1st5, col=clst, stretch="lin")
 # source function
 source("source_test_lezione.r") #inserisco un pezzo di codice e lo carico direttamente tramite la funzione source, calcola la deviazione standard con matrice 7x7
@@ -487,11 +488,11 @@ grid.arrange(p1,p2,p3, nrow=1)
 
 # 11. R code Spectral Signatures
 
-library(raster)
+library(raster) #carico i pacchetti richiesti
 library(rgdal)
 library(ggplot2)
-setwd("C:/lab/")
-defor2<-brick("defor2.jpg")
+setwd("C:/lab/") #set della cartella di lavoro
+defor2<-brick("defor2.jpg") #carico il file con tutte le sue bande e l'associo ad una variabile
 # defor2.1, defor2.2, defor2.3 
 # NIR, red, green
 
@@ -502,17 +503,17 @@ click(defor2, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue") #prim
 #results 
 #  x     y   cell defor2.1 defor2.2 defor2.3
 #1 179.5 186.5 208827       53       63       98
-      x     y   cell defor2.1 defor2.2 defor2.3
+#     x     y   cell defor2.1 defor2.2 defor2.3
 #1 647.5 237.5 172728       84       90      150
-      x     y   cell defor2.1 defor2.2 defor2.3
+#     x     y   cell defor2.1 defor2.2 defor2.3
 #1 179.5 186.5 208827       53       63       98
 #2 647.5 237.5 172728       84       90      150
-#decido di fare una tabell con le varie bande
+#decido di fare una tabella con le varie bande
 #define the columns of thedatset:
-band<-c(1,2,3)
+band<-c(1,2,3) #creo dei vettori
 forest<-c(206,6,19)
 water<-c(40,99,139)
-spectral_s<-data.frame(band, forest, water) #faccio un dataframe
+spectral_s<-data.frame(band, forest, water) #faccio un dataframe con i vettori creati prima
 
 #plot the spectral signature
 ggplot(spectral_s, aes(x=band)) + geom_line(aes(y=forest),color="green")+  #geom_line è il tipo di grafico, ggplot apre solo il plot, geom definisce il grafico
@@ -524,10 +525,10 @@ labs(x="band",y="reflectance") #labs= labels
 # facciamo l'analisi multitemporale
 # va fatto sullo stesso pixel o stessa zona
 
-defor1<-brick("defor1.jpg")
+defor1<-brick("defor1.jpg") #carico il file e l'associo ad un oggetto
 plotRGB(defor1, r=1, g=2, b=3, stretch="hist") # plotto con stretch ad istogramma
 
-click(defor1, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue")
+click(defor1, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue") #funzione spiegata qualche riga prima
 plotRGB(defor2, r=1, g=2, b=3, stretch="hist")
 
 # RESULTS
@@ -558,28 +559,26 @@ click(defor2, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue")
 #1 136.5 285.5 137801      201       11       21
 
 #colonne dataset
-band<-c(1,2,3)
+band<-c(1,2,3) #creo dei vettori contenenti valori
 time1<-c(204,3,21)
 time1p2<-c(201,6,20) #tempo 1 pixel 2
 time2p2<-c(168,98,86) #tempo 2 pixel 2
 time2<-c(143,82,79)
-spectral_s<-data.frame(band, forest, water) #faccio un dataframe
-
-
-spectral_st<-data.frame(band, time1, time2)
+spectral_s<-data.frame(band, forest, water) #faccio un dataframe con i vettori appena generati
+spectral_st<-data.frame(band, time1, time2) #faccio un nuovo dataframe
 
 # plot spectral signatures
 ggplot(spectral_st, aes(x=band)) + geom_line(aes(y=time1),color="red")+  #geom_line è il tipo di grafico, ggplot apre solo il plot, geom definisce il grafico
-geom_line(aes(y=time2),color="blue")+
+geom_line(aes(y=time2),color="blue")+ #aggiungo nello stesso grafico più funzioni
 geom_line(aes(y=time1p2),color="grey")+
 geom_line(aes(y=time2p2),color="black", linetype="dotted")+
 labs(x="band",y="reflectance") #labs= labels
 
 # image from Earth Observatory
 
-caspio<-brick("caspian_2010.jpg")
-plotRGB(caspio, 1,2,3, stretch="hist")
-click(caspio, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue")
+caspio<-brick("caspian_2010.jpg") #carico il file e lo associo ad un oggetto con tutte le sue bande
+plotRGB(caspio, 1,2,3, stretch="hist") #plot del file con distribuzione del colore secondo una tendenza hist
+click(caspio, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue") #funzione spiegata nelle righe precedenti
 
 # results
 #     x      y     cell caspian_2010.1 caspian_2010.2 caspian_2010.3
@@ -589,16 +588,16 @@ click(caspio, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue")
 #       x      y     cell caspian_2010.1 caspian_2010.2 caspian_2010.3
 #1 1586.5 2018.5 15757987             99             94             64
 
-band<-c(1,2,3)
+band<-c(1,2,3) #creo dei vettori contenenti numeri
 stratum1<-c(47,77,75)
 stratum2<-c(67,83,47) 
 stratum3<-c(99,94,64)
 
-spectralsg<-data.frame(band, stratum1, stratum2, stratum3) #faccio un dataframe
+spectralsg<-data.frame(band, stratum1, stratum2, stratum3) #faccio un dataframe con i vettori appena fatti
 
 ggplot(spectralsg, aes(x=band)) + 
 geom_line(aes(y=stratum1),color="red", linetype="dotted")+  #geom_line è il tipo di grafico, ggplot apre solo il plot, geom definisce il grafico
-geom_line(aes(y=stratum2),color="blue", linetype="dotted")+
+geom_line(aes(y=stratum2),color="blue", linetype="dotted")+ 
 geom_line(aes(y=stratum3),color="grey", linetype="dotted")
 labs(x="band",y="reflectance") #labs= labels
 
