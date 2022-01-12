@@ -14,6 +14,7 @@
 # 8. R code Vegetation Indices
 # 9. R code Land Cover
 # 10. R code Variability
+# 11. R code Spectral Signatures
 
 
 #------------------------------------------------------------------------
@@ -29,7 +30,7 @@ p224r63_2011 <- brick("p224r63_2011_masked.grd") #assegno ad una variabile inter
 
 plot(p224r63_2011, col=cl) #stampo a video le immagini satellitari con scala di colore random di riflettanza
 # B=blu B2= banda del verde, B3=rosso, B4=NIR, B5=SWIR (ShortWave IR), B6=TIR (Thermal IR), B7=SWIR2.
-#colorRampPalette("black","grey","light grey") e dobbiamo racchiuderli in un vettore ed è una serie di caratteri, uso la c
+#creo una palette di colori con colorRampPalette("black","grey","light grey") e dobbiamo racchiuderli in un vettore ed è una serie di caratteri, uso la c
 cl<-colorRampPalette(c("black","grey","light grey"))(100) #il numero indica quanti livelli di colore ho e la assegno ad una variabile cl
 #faccio il plot con il nuovo colore
 plot(p224r63_2011,col=cl)#il primo arg. è l'immagine, il secondo è il colore che prendo dal vettore cl
@@ -153,7 +154,7 @@ plot(lst_2010)
 lst_2015<-raster("lst_2015.tif")
 plot(lst_2015)
 #par
-par(mfrow=c(2,2))
+par(mfrow=c(2,2)) #faccio un multi frame di 2x2
 plot(lst_2000)
 plot(lst_2005)
 plot(lst_2010)
@@ -162,7 +163,8 @@ plot(lst_2015)
 #per importare tutte le immagini in maniera sincrona
 # inserire una serie di immagini tutte insieme
 rlist<-list.files(pattern="lst") #prendo lst come pattern comunne per caricare i file insieme, creo una lista di file
-import<-lapply(rlist, raster) #applico la funzione raster a tutti i file contenuti nella rlist contemporaneamente e la associamo al dataset "import"
+import<-lapply(rlist, raster)#applico la funzione raster a tutti i file contenuti nella rlist contemporaneamente e la associamo al dataset "import"
+#lapply applica una funzione ad un gruppo di dati o files e in questo caso il risultato lo associo alla variabile import
 #facciamo un file unico dalla lista (un pacchetto di files)
 TGr<-stack(import) #unisce tutti i file contenuti nella lista import
 plot(TGr)
@@ -193,7 +195,7 @@ levelplot(melt_amount,col.regions=cl2, main="ice loss from 1979 to 2007")
 # Visualizing Copernicus data
 # ci servono delle librerie per aprire i file scaricati
 setwd("C:/lab/") #imposto la cartella lab come cartella di lavoro
-library(raster)
+library(raster) #richiamo i pacchetti
 library(ncdf4)
 soil_w_index<-raster("c_gls_SWI1km_202104071200_CEURO_SCATSAR_V1.0.1.nc") # carico in R il file esterno
 cls <- colorRampPalette(c('light blue','green','red','yellow'))(150) #assegno una ramp palette
@@ -217,15 +219,15 @@ stitch("R_code_Greenland.txt", template=system.file("misc", "knitr-template.Rnw"
 
 # R_code_multivaried_analysis
 #serve per diminuire il set di variabili
-#quando ci sono variabili non molto correlabili, prendo il file originale e faccio la pca
-library(raster)
+#quando ci sono variabili non molto correlabili, prendo il file originale e faccio la pca per introdurre la direzione di minore variabilità
+library(raster) #carico i pacchetti
 library(RStoolbox)
 
-setwd("C:/lab/")
+setwd("C:/lab/") #set della cartella di lavoro
 
 p224r63_2011<-brick("p224r63_2011_masked.grd") # brick mi carica tutto il set di dati, raster solo un una banda per volta
 plot(p224r63_2011)
-plot(p224r63_2011$B1_sre,p224r63_2011$B2_sre, col=red, pch=19, cex=2) #plotto dell'immagine, solo le bande b1 e b2 e vedo come sono correlati, Multicollinearità, cioè i punti sono ben correlati
+plot(p224r63_2011$B1_sre,p224r63_2011$B2_sre, col=red, pch=19, cex=2) #plot dell'immagine, solo le bande b1 e b2 e vedo come sono correlati, Multicollinearità, cioè i punti sono ben correlati
 #voglio vedere la correlazione tra tutte le variabili e plottarle a coppie e vedere quelle che si correlano
 pairs(p224r63_2011)
 #ricampionare il dato poichè col PCA è troppo impattante con la risoluzione originale e aggreghiamo i pixel con una media generando un solo pixel.
@@ -233,19 +235,19 @@ pairs(p224r63_2011)
 # aggregate cells
 p224r63_2011res<-aggregate(p224r63_2011, fact=10) #resampled #ingrandiamo il pixel e riduciamo la risoluzione dell'immagine di 10 volte
 p224r63_2011res #avrò una immagine 300 x 300 pxl
-par(mfrow=c(2,1))
-plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") #banda deel rosso c'è IR, nel verde il rosso
+par(mfrow=c(2,1)) #preparo un multiframe
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") #nella banda del rosso c'è IR, nel verde il rosso, stretch lineare
 plotRGB(p224r63_2011res, r=4, g=3, b=2, stretch="Lin")
 # PCA principal component analysis for rasters, passiamo l'asse lungo la variabilità maggiore e a quella minore. 
 p224r63_2011res_pca<-rasterPCA(p224r63_2011res)
 summary(p224r63_2011res_pca$model) #ci dà un sommario del nostro modello
  # ecco il risultato 
  #Importance of components:
-                          Comp.1      Comp.2       Comp.3       Comp.4
+#                         Comp.1      Comp.2       Comp.3       Comp.4
 #Standard deviation     1.2050671 0.046154880 0.0151509516 4.575220e-03
 #Proportion of Variance 0.9983595 0.001464535 0.0001578135 1.439091e-05 #la seconda banda aggiunge solo 0.1464535 % alla prima banda
 #Cumulative Proportion  0.9983595 0.999824022 0.9999818357 9.999962e-01 #con la sola prima componente spiego il 99,83595%, mentre con quattro bande il 99,99962e-01  cioè quasi la totalità.  
-                             Comp.5       Comp.6       Comp.7
+#                             Comp.5       Comp.6       Comp.7
 #Standard deviation     1.841357e-03 1.233374e-03 7.595367e-04
 #Proportion of Variance 2.330990e-06 1.045814e-06 3.966085e-07
 #Cumulative Proportion  9.999986e-01 9.999996e-01 1.000000e+00 #100%
@@ -259,8 +261,9 @@ plot(p224r63_2011res_pca$map$PCA1, p224r63_2011res_pca$map$PCA2)
 # 6. R code Classification
 
 #R_code_classification.r
-setwd("C:/lab/")
-library(raster)
+
+setwd("C:/lab/") #set della cartella di lavoro
+library(raster) #carico i pacchetti necessari
 library(RStoolbox)
 #carico la libreria raster
 so<-brick("Solar_Orbiter_s_first_views_of_the_Sun_pillars.jpg") #importo l'immagine multibanda esterna all'ambiente R e le metto insieme
@@ -273,11 +276,11 @@ soc<-unsuperClass(so, nClasses=3) #associamo le classi ad un oggetto
 plot(soc$map) #ho una mappa delle classi ma in scala continua e la classificazione non è replicabile
 set.seed(42) # mi rende le classi intere
 soc20<-unsuperClass(so, nClasses=3)
-cl <- colorRampPalette(c('yellow','red','brown'))(150)
+cl <- colorRampPalette(c('yellow','red','brown'))(150) #creo una palette idonea
 plot(soc20$map,col=cl)
 #altra immagine
 so3<-brick("sun.jpg")
-sun3<-unsuperClass(so3, nClasses=3)
+sun3<-unsuperClass(so3, nClasses=3) 
 plot(sun3$map)
  
 # Grand Canyon 
@@ -294,22 +297,22 @@ gcc4<-unsuperClass(so, nClasses=4) #4 classi
 
 # 7. R code ggplot2
 
-library(raster)
+library(raster) #carico i pacchetti necessari
 library(RStoolbox)
 library(ggplot2)
 library(gridExtra)
 
-setwd("C:/lab/")
+setwd("C:/lab/") #set dell'area di lavoro
 
-p224r63 <- brick("p224r63_2011_masked.grd")
+p224r63 <- brick("p224r63_2011_masked.grd") #associo alla variabile tutto il file 
 
-ggRGB(p224r63,3,2,1, stretch="lin")
-ggRGB(p224r63,4,3,2, stretch="lin")
+ggRGB(p224r63,3,2,1, stretch="lin") #plot con ggplot in RGB 
+ggRGB(p224r63,4,3,2, stretch="lin") #plot in RGB con falsi colori
 
-p1 <- ggRGB(p224r63,3,2,1, stretch="lin")
+p1 <- ggRGB(p224r63,3,2,1, stretch="lin") #associo i plot ad una variabile
 p2 <- ggRGB(p224r63,4,3,2, stretch="lin")
 
-grid.arrange(p1, p2, nrow = 2) # this needs gridExtra
+grid.arrange(p1, p2, nrow = 2) # this needs gridExtra #con grid extra accorpo i grafici di ggplot
 
 #------------------------------------------------------------------------
 
@@ -482,7 +485,120 @@ grid.arrange(p1,p2,p3, nrow=1)
 
 #------------------------------------------------------------------------
 
+# 11. R code Spectral Signatures
+
+library(raster)
+library(rgdal)
+library(ggplot2)
+setwd("C:/lab/")
+defor2<-brick("defor2.jpg")
+# defor2.1, defor2.2, defor2.3 
+# NIR, red, green
+
+plotRGB(defor2, r=1, g=2, b=3, stretch="hist") # plotto con stretch ad istogramma
+
+click(defor2, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue") #prima cosa l'argomento (l'immagine), poi gli chiediamo di creare un ID per punto, # le coordinate # cell sul pixel #type 
+    # è una funzione che ci permette di avere le info direttamente cliccando sull'area di interesse nell'immagine
+#results 
+#  x     y   cell defor2.1 defor2.2 defor2.3
+#1 179.5 186.5 208827       53       63       98
+      x     y   cell defor2.1 defor2.2 defor2.3
+#1 647.5 237.5 172728       84       90      150
+      x     y   cell defor2.1 defor2.2 defor2.3
+#1 179.5 186.5 208827       53       63       98
+#2 647.5 237.5 172728       84       90      150
+#decido di fare una tabell con le varie bande
+#define the columns of thedatset:
+band<-c(1,2,3)
+forest<-c(206,6,19)
+water<-c(40,99,139)
+spectral_s<-data.frame(band, forest, water) #faccio un dataframe
+
+#plot the spectral signature
+ggplot(spectral_s, aes(x=band)) + geom_line(aes(y=forest),color="green")+  #geom_line è il tipo di grafico, ggplot apre solo il plot, geom definisce il grafico
+geom_line(aes(y=water),color="blue")+
+labs(x="band",y="reflectance") #labs= labels
+
+############################# MULTITEMPORAL
+
+# facciamo l'analisi multitemporale
+# va fatto sullo stesso pixel o stessa zona
+
+defor1<-brick("defor1.jpg")
+plotRGB(defor1, r=1, g=2, b=3, stretch="hist") # plotto con stretch ad istogramma
+
+click(defor1, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue")
+plotRGB(defor2, r=1, g=2, b=3, stretch="hist")
+
+# RESULTS
+# x     y   cell defor1.1 defor1.2 defor1.3
+#1 91.5 325.5 108620      204        3       21
+#      x     y   cell defor1.1 defor1.2 defor1.3
+#1 145.5 302.5 125096      201        6       20
+#      x     y   cell defor1.1 defor1.2 defor1.3
+#1 108.5 304.5 123631      217       25       38
+#     x     y   cell defor1.1 defor1.2 defor1.3
+#1 89.5 285.5 137178      198       14       26
+#     x     y   cell defor1.1 defor1.2 defor1.3
+#1 68.5 308.5 120735      206       22       34
+
+plotRGB(defor2, r=1, g=2, b=3, stretch="LIN") # plotto con stretch ad istogramma
+click(defor2, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue")
+
+#RESULTS
+# x     y  cell defor2.1 defor2.2 defor2.3
+#1 90.5 345.5 94735      143       82       79
+#      x     y  cell defor2.1 defor2.2 defor2.3
+#1 120.5 349.5 91897      168       98       86
+#      x     y   cell defor2.1 defor2.2 defor2.3
+#1 137.5 321.5 111990      170       33       40
+#      x     y   cell defor2.1 defor2.2 defor2.3
+#1 105.5 315.5 116260      120      125      105
+#      x     y   cell defor2.1 defor2.2 defor2.3
+#1 136.5 285.5 137801      201       11       21
+
+#colonne dataset
+band<-c(1,2,3)
+time1<-c(204,3,21)
+time1p2<-c(201,6,20) #tempo 1 pixel 2
+time2p2<-c(168,98,86) #tempo 2 pixel 2
+time2<-c(143,82,79)
+spectral_s<-data.frame(band, forest, water) #faccio un dataframe
 
 
+spectral_st<-data.frame(band, time1, time2)
 
+# plot spectral signatures
+ggplot(spectral_st, aes(x=band)) + geom_line(aes(y=time1),color="red")+  #geom_line è il tipo di grafico, ggplot apre solo il plot, geom definisce il grafico
+geom_line(aes(y=time2),color="blue")+
+geom_line(aes(y=time1p2),color="grey")+
+geom_line(aes(y=time2p2),color="black", linetype="dotted")+
+labs(x="band",y="reflectance") #labs= labels
+
+# image from Earth Observatory
+
+caspio<-brick("caspian_2010.jpg")
+plotRGB(caspio, 1,2,3, stretch="hist")
+click(caspio, id=T, xy=T, cell=T, type="point", pch=16, cex=4, col="blue")
+
+# results
+#     x      y     cell caspian_2010.1 caspian_2010.2 caspian_2010.3
+#1 3432.5 2810.5 12275033             47             77             75
+#       x      y     cell caspian_2010.1 caspian_2010.2 caspian_2010.3
+#1 1464.5 3002.5 11428265             67             83             47
+#       x      y     cell caspian_2010.1 caspian_2010.2 caspian_2010.3
+#1 1586.5 2018.5 15757987             99             94             64
+
+band<-c(1,2,3)
+stratum1<-c(47,77,75)
+stratum2<-c(67,83,47) 
+stratum3<-c(99,94,64)
+
+spectralsg<-data.frame(band, stratum1, stratum2, stratum3) #faccio un dataframe
+
+ggplot(spectralsg, aes(x=band)) + 
+geom_line(aes(y=stratum1),color="red", linetype="dotted")+  #geom_line è il tipo di grafico, ggplot apre solo il plot, geom definisce il grafico
+geom_line(aes(y=stratum2),color="blue", linetype="dotted")+
+geom_line(aes(y=stratum3),color="grey", linetype="dotted")
+labs(x="band",y="reflectance") #labs= labels
 
