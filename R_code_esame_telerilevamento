@@ -15,12 +15,12 @@ library(ggpubr)
 
 # 2013
 
-rlist<-list.files(pattern="LC08_L1TP_161028_20130506_20170504_01_T1_B")
-import<-lapply(rlist,raster)
+rlist<-list.files(pattern="LC08_L1TP_161028_20130506_20170504_01_T1_B") #creo una lista cercando elementi comuni
+import<-lapply(rlist,raster) #con lapply applico la funzione citata a tutta la lista
 lar2013<-stack(import) #unisce in un singolo file quelli che erano in lista
-p1<-ggRGB(lar2013, 4,3,2, stretch="lin")+labs(title="2013")
+p1<-ggRGB(lar2013, 4,3,2, stretch="lin")+labs(title="2013") #plot in RGB
 p2<-ggRGB(lar2013, 5,4,3, stretch="hist")+labs(title="2013 IR") #falsi colori IR
-grid.arrange(p1,p2,nrow=1,top="Confronto tra RGB e IR")
+grid.arrange(p1,p2,nrow=1,top="Confronto tra RGB e IR") #creo una figura con più grafici
 
 # 2015
 
@@ -50,7 +50,6 @@ p8<-ggRGB(lar2021, 5,4,3, stretch="hist")+labs(title="2021 IR") #falsi colori IR
 grid.arrange(p7,p8,nrow=1,top="Confronto tra RGB e IR")
 
 #plotto le 4 immagini per presentarle
-
 grid.arrange(p1,p3,p5,p7,nrow=2,ncol=2, top="Time Series del Lago d'Aral")
 
 #plotto le 4 immagini per presentarle in IR
@@ -61,19 +60,18 @@ grid.arrange(p1,p7,nrow=1, top="Confronto  2013 / 2021")
 cl<-colorRampPalette(c("darkblue","yellow","red","black"))(150)
 
 # unsuperClass dell'immagine 2013
-set.seed(42)
-clasimm2013<-unsuperClass(lar2013, nClasses=4)
-plot(clasimm2013$map, col=cl) #si vedono le aree bagnate
-freq(clasimm2013$map)       
+set.seed(42) #rendo le classi discrete
+clasimm2013<-unsuperClass(lar2013, nClasses=4) #applico la funzione unsuperclass con 4 classi
+plot(clasimm2013$map, col=cl) #plot della mappa delle classi #si vedono le aree bagnate
+freq(clasimm2013$map) #vedo la conta dei pixel
 df1<-data.frame(freq(clasimm2013$map)) #creo un piccolo dataframe con i pixel categorizzati
 sum2013<-sum(df1$count) #sommo tutta la colonna dei count
 df1$perc_2013<-(df1$count/sum2013)*100 #aggiungo un vettore interno al dataframe con le percentuali del 2013
 rownames(df1)<-c("classe_1","classe_2","classe_3","classe_4") #rinomino le righe
 colnames(df1)<-c("classe","count","perc_2013") #rinomino le colonne
-#df1<-data.frame(classe=df1$value,perc_2013=df1$percentuale2013) #aggiorno il dataframe con solo le info che mi servono
-df1$classe<-c("Classe 1","Classe 2","Classe 3", "Classe 4")
+df1$classe<-c("Classe 1","Classe 2","Classe 3", "Classe 4") #aggiungo un vettore "classe" al dataframe
 p9<-ggplot(df1,aes(x=classe,y=perc_2013, fill=classe))+(geom_bar(stat="identity", color="black"))+labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2013")+theme(legend.position="bottom")
-
+#geom_bar mi indica il tipo di grafico, labs sono i labels degli assi e theme mi dà delle opzioni su come posizionare la legenda
 
 # unsuperClass dell'immagine 2021
 set.seed(42)
@@ -88,11 +86,12 @@ colnames(df2)<-c("classe","count","perc_2021") #ho rinominato le colonne
 df2$classe<-c("Classe 1","Classe 2","Classe 3", "Classe 4")
 p10<-ggplot(df2,aes(x=classe,y=perc_2021, fill=classe))+(geom_bar(stat="identity", color="black"))+labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2021")+theme(legend.position="bottom")
 
-par(mfrow=c(1,2))
+par(mfrow=c(1,2)) #creo un multiframe
 plot(clasimm2013$map, col=cl)
 plot(clasimm2021$map, col=cl)
-grid.arrange(p9,p10,nrow=1,top="Confronto tra unsuperClass del 2013 e 2021")
+grid.arrange(p9,p10,nrow=1,top="Confronto tra unsuperClass del 2013 e 2021") #plot in una unica figura
 
+#mostro come sono costituiti i dataframe 
 df1
 #               classe    count perc_2013
 # classe_1     Classe 1 16578169  29.94807
@@ -103,11 +102,11 @@ df1
 df2
 #               classe    count perc_2013
 # classe_1     Classe 1 23066681  38.79627
-# classe_2     Classe 2  5849422   9.83825              QUESTE CATEGORIE CAMBIANO DI VOLTA IN VOLTA. QUANDO SI FA IL DEFINITIVO, CAMBIARE QUALCHE CLASSE NEI CALCOLI
+# classe_2     Classe 2  5849422   9.83825              
 # classe_3     Classe 3 12714691  21.38507
 # classe_4     Classe 4 17825127  29.98041
 
-diff_perc<-(((df1[3,2])-(df2[2,2]))/df1[3,2])*100
+diff_perc<-(((df1[3,2])-(df2[2,2]))/df1[3,2])*100 #agisco solo sulla terza riga e seconda colonna del df1 e seconda riga e colonna del df2
 diff_perc
 # [1] 31.99867  # Percentuale di riduzione dell'area bagnata rispetto al 2013       IN QUESTO CASO, NUMERO CORRETTO MA CLASSI DI VOLTA IN VOLTA DIVERSE
 
@@ -115,7 +114,7 @@ clst<-colorRampPalette(c("cyan","red","yellow","green","black","white"))(150)
 
 # ndwi2013 normalized difference water index 2013
 
-green2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B3
+green2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B3 #acquisisco le varie bande separatamente
 nir2013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B5
 ndwi2013<-(green2013-nir2013)/(green2013+nir2013)
 cl<-colorRampPalette(c("darkblue","yellow","red","black"))(150)
@@ -133,9 +132,9 @@ plot(ndwi2021, col=cl)
 
 cl_diff<-colorRampPalette(c("darkblue","blue","khaki1","white","black"))(200)
 ndwi2013_ex<-resample(ndwi2013,ndwi2021,method="bilinear") #ricampiono il ndvi2013 secondo le dim del 2021, con metodo bilineare
-ndwi_diff<- ndwi2013_ex-ndwi2021
+ndwi_diff<- ndwi2013_ex-ndwi2021 #faccio la differenza dell'indice
 plot(ndwi_diff, col=cl_diff) 
-plot(ndwi2021, ndwi2013_ex,col=ct)
+plot(ndwi2021, ndwi2013_ex,col=ct) #plot dei punti su un piano cartesiano
 
 # MNDWI 2013 Modification of normalized difference water index 
 
@@ -184,7 +183,7 @@ plot(ndvi2021, col=cs,main="2021")
 ndvi2013_ex<-resample(ndvi2013,ndvi2021,method="bilinear") #ricampiono il ndvi2013 secondo le dim del 2021, con metodo bilineare
 ndvi_diff<- ndvi2013_ex-ndvi2021
 plot(ndvi_diff, col=ct)
-plot(ndvi2021,ndvi2013_ex, maxpixels = 5e+05)
+plot(ndvi2021,ndvi2013_ex, maxpixels = 5e+05) #maxipixels incrementa la quantità di pixel nel plot
 
 #AWEI 2013 automated water extraction index
 swir22013<-lar2013$LC08_L1TP_161028_20130506_20170504_01_T1_B7
@@ -203,10 +202,10 @@ awei_diff<- awei2013_ex-awei2021
 plot(awei_diff, col=ct)
 plot(awei2021,awei2013_ex, maxpixels = 5e+05)
 
-box<-stack(mndwi_diff, ndwi_diff, awei_diff)
+box<-stack(mndwi_diff, ndwi_diff, awei_diff) #associo ad un oggetto lo stack degli indici
 plot(box, col=cs)
 pairs(box) #da mettere alla fine con tutti gli indici
-varpca<-rasterPCA(box)
+varpca<-rasterPCA(box) #faccio la pca
 summary(varpca$model)
 #Importance of components:
 #                         Comp.1       Comp.2       Comp.3
@@ -221,7 +220,7 @@ plot(varpcaN,col=cl)
 
 # SPECTRAL SIGNATURE
 plotRGB(lar2013, 5,4,3, stretch="hist")
-click(lar2013,id=T,xy=T,cell=T,type="point",pch=16,cex=4,col="blue")
+click(lar2013,id=T,xy=T,cell=T,type="point",pch=16,cex=4,col="blue") #con la funzione click acquisisco il valore del pixel lì dove clicco nell'immagine
 #creo le colonne del dataset
 band<-c("B1-C_AEROSOL","B2-BLUE","B3-GREEN","B4-RED","B5-NIR","B6-SWIR_1","B7-SWIR_2","B9-CIRRUS")
 bande<-c("B1","B2","B3","B4","B5","B6","B7","B9")
@@ -257,7 +256,7 @@ tdp8<-c(1722,	1957,	2202,	2812,	149,	2929,	3841,	61)
 tdp9<-c(645,	708,	620,	1082,	-1325,	1607,	2409,	3)
 tdp10<-c(833,	1016,	1617,	2394,	993,	3013,	3359,	-3)
 spectral_s<-data.frame(band,bande, t1p1,	t1p2,	t1p3,	t1p4,	t1p5,	t1p6,	t1p7,	t1p8,	t1p9,	t1p10,	t2p1,	t2p2,	t2p3,	t2p4,	t2p5,	t2p6,	t2p7,	t2p8,	t2p9,	t2p10,	tdp1,	tdp2,	tdp3,	tdp4,	tdp5,	tdp6,	tdp7,	tdp8,	tdp9,	tdp10)
-gg1<-ggplot(spectral_s,aes(x=band,y=t1p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 1 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
+gg1<-ggplot(spectral_s,aes(x=band,y=t1p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 1 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000)) #con coord_cart. indico il range di valori dell'asse y
 gg2<-ggplot(spectral_s,aes(x=band,y=t2p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 1 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
 gg3<-ggplot(spectral_s,aes(x=band,y=t1p2, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 2 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
 gg4<-ggplot(spectral_s,aes(x=band,y=t2p2, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 2 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
@@ -297,7 +296,7 @@ figure <-ggarrange(gg21,gg22,gg23,gg24,gg25,gg26,gg27,gg28,gg29,gg30, ncol = 4, 
 annotate_figure(figure,
                top = text_grob("DIFFERENZA TRA FIRME SPETTRALI (2021 - 2013)", color = "black", face = "bold", size = 14),
                bottom = text_grob("Bande: \n B1 = Cirrus Aerosol,  B2 = Blue,  B3 = Green,  B4 = Red,  B5 = NIR,  B6 = SWIR 1,  B7 = SWIR 2,  B9 = CIRRUS \t\n", color = "blue4",
-               hjust = 1, x = 1, face = "italic", size = 10))
+               hjust = 1, x = 1, face = "italic", size = 10)) #questa funzione mi consente di inserire commenti, didascalie e labs
 
 
 
