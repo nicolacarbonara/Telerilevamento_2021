@@ -70,7 +70,10 @@ df1$perc_2013<-(df1$count/sum2013)*100 #aggiungo un vettore interno al dataframe
 rownames(df1)<-c("classe_1","classe_2","classe_3","classe_4") #rinomino le righe
 colnames(df1)<-c("classe","count","perc_2013") #rinomino le colonne
 df1$classe<-c("Classe 1","Classe 2","Classe 3", "Classe 4") #aggiungo un vettore "classe" al dataframe
-p9<-ggplot(df1,aes(x=classe,y=perc_2013, fill=classe))+(geom_bar(stat="identity", color="black"))+labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2013")+theme(legend.position="bottom")
+p9<-ggplot(df1,aes(x=classe,y=perc_2013, fill=classe))+
+  geom_bar(stat="identity", color="black")+
+  labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2013")+
+  theme(legend.position="bottom")
 #geom_bar mi indica il tipo di grafico, labs sono i labels degli assi e theme mi dà delle opzioni su come posizionare la legenda
 
 # unsuperClass dell'immagine 2021
@@ -84,7 +87,10 @@ df2$perc_2021<-(df2$count/sum2021)*100#ggiungo un vettore interno al dataframe c
 rownames(df2)<-c("classe_1","classe_2","classe_3","classe_4") #ho rinominato le righe
 colnames(df2)<-c("classe","count","perc_2021") #ho rinominato le colonne
 df2$classe<-c("Classe 1","Classe 2","Classe 3", "Classe 4")
-p10<-ggplot(df2,aes(x=classe,y=perc_2021, fill=classe))+(geom_bar(stat="identity", color="black"))+labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2021")+theme(legend.position="bottom")
+p10<-ggplot(df2,aes(x=classe,y=perc_2021, fill=classe))+
+  geom_bar(stat="identity", color="black"))+
+  labs(x="Classi",y="Percentuale",title="Percentuale per Classe 2021")+
+  theme(legend.position="bottom")
 
 par(mfrow=c(1,2)) #creo un multiframe
 plot(clasimm2013$map, col=cl)
@@ -301,7 +307,8 @@ annotate_figure(figure,
 
 
 
-#references: indexdatabase.de, dea.lib.unideb.hu:2437/230928
+#references: 
+#indexdatabase.de, dea.lib.unideb.hu:2437/230928
 #Mustafa Mustafa T., Hassoon Khalid I., Hassan Modher and Abd Modher H. "Using water indices (NDWI, MNDWI, NDMI, WRI and AWEI) to detect physical and chemical parameters by apply remote sensing and GIS techniques". International Journal of Research - Granthaalayah 5, no. 10 (2017): 117-128.
 #Xu, H. "Modification of Normalised Difference Water Index (NDWI) to Enhance Open Water Features in Remotely Sensed Imagery." International Journal of Remote Sensing 27, No. 14 (2006): 3025-3033." (ESRI, 2018)
-#AWEI Feyisa, G.L.; Meilby, H.; Fensholt, R.; Proud, S.R. Automated water extraction index: A new technique for surface water mapping using Landsat imagery. Remote Sens. Environ. 2014, 140, 23–35.
+#Feyisa, G.L.; Meilby, H.; Fensholt, R.; Proud, S.R. Automated water extraction index: A new technique for surface water mapping using Landsat imagery. Remote Sens. Environ. 2014, 140, 23–35.
