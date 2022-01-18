@@ -231,7 +231,7 @@ click(lar2013,id=T,xy=T,cell=T,type="point",pch=16,cex=4,col="blue") #con la fun
 band<-c("B1-C_AEROSOL","B2-BLUE","B3-GREEN","B4-RED","B5-NIR","B6-SWIR_1","B7-SWIR_2","B9-CIRRUS")
 bande<-c("B1","B2","B3","B4","B5","B6","B7","B9")
 # t= time p= pixel d= differenza
-t1p1<-c(11048,	10256,	9911,	7294,	5911,	5367,	5243,	5044)
+t1p1<-c(11048,	10256,	9911,	7294,	5911,	5367,	5243,	5044)        # time 1 pixel 1
 t1p2<-c(11946,	11636,	11741,	9119,	6062,	5422,	5293,	5065)
 t1p3<-c(18864,	19034,	19153,	19748,	20661,	11805,	8328,	5067)
 t1p4<-c(11347,	10829,	11224,	10894,	9678,	5569,	5353,	5046)
@@ -251,7 +251,7 @@ t2p7<-c(13167,	12928,	12671,	13768,	16310,	17672,	15460,	5086)
 t2p8<-c(13150,	12801,	12739,	13347,	16209,	19414,	17566,	5148)
 t2p9<-c(12756,	12475,	12869,	13830,	16373,	20271,	18193,	5072)
 t2p10<-c(13009,	12871,	13705,	15237,	18538,	22842,	20804,	5100)
-tdp1<-c(6142,	7170,	7622,	10937,	13622,	7759,	3560,	9)      #DIFFERENZA TRA T2 E T1
+tdp1<-c(6142,	7170,	7622,	10937,	13622,	7759,	3560,	9)      #DIFFERENZA TRA Tempo 2 e Tempo 1 per pixel #tdp1 = time diff pixel 1
 tdp2<-c(6145,	6976,	7190,	10574,	15254,	14252,	9195,	10)
 tdp3<-c(1207,	1466,	1807,	2238,	2812,	10257,	9546,	-3)
 tdp4<-c(867,	837,	70,	1394,	6835,	11662,	7304,	18)
@@ -262,6 +262,7 @@ tdp8<-c(1722,	1957,	2202,	2812,	149,	2929,	3841,	61)
 tdp9<-c(645,	708,	620,	1082,	-1325,	1607,	2409,	3)
 tdp10<-c(833,	1016,	1617,	2394,	993,	3013,	3359,	-3)
 spectral_s<-data.frame(band,bande, t1p1,	t1p2,	t1p3,	t1p4,	t1p5,	t1p6,	t1p7,	t1p8,	t1p9,	t1p10,	t2p1,	t2p2,	t2p3,	t2p4,	t2p5,	t2p6,	t2p7,	t2p8,	t2p9,	t2p10,	tdp1,	tdp2,	tdp3,	tdp4,	tdp5,	tdp6,	tdp7,	tdp8,	tdp9,	tdp10)
+#assegno ogni grafico ad una variabile gg**
 gg1<-ggplot(spectral_s,aes(x=band,y=t1p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 1 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000)) #con coord_cart. indico il range di valori dell'asse y
 gg2<-ggplot(spectral_s,aes(x=band,y=t2p1, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 1 (2021)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
 gg3<-ggplot(spectral_s,aes(x=band,y=t1p2, fill=band))+(geom_bar(stat="identity", color="black"))+labs(x="Bande",y="Valore px",title="Spectral Signature pxl 2 (2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(0,23000))
@@ -298,7 +299,7 @@ gg27<-ggplot(spectral_s,aes(x=bande,y=tdp7))+(geom_bar(stat="identity", color="b
 gg28<-ggplot(spectral_s,aes(x=bande,y=tdp8))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 8 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
 gg29<-ggplot(spectral_s,aes(x=bande,y=tdp9))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 9 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
 gg30<-ggplot(spectral_s,aes(x=bande,y=tdp10))+(geom_bar(stat="identity", color="black", fill="red1"))+labs(x="Bande",y="Valore px",title="Difference SS pxl 10 (2021 - 2013)")+theme(legend.position="bottom")+coord_cartesian(ylim = c(-4000,23000))
-figure <-ggarrange(gg21,gg22,gg23,gg24,gg25,gg26,gg27,gg28,gg29,gg30, ncol = 4, nrow = 3,common.legend = TRUE)
+figure <-ggarrange(gg21,gg22,gg23,gg24,gg25,gg26,gg27,gg28,gg29,gg30, ncol = 4, nrow = 3,common.legend = TRUE) 
 annotate_figure(figure,
                top = text_grob("DIFFERENZA TRA FIRME SPETTRALI (2021 - 2013)", color = "black", face = "bold", size = 14),
                bottom = text_grob("Bande: \n B1 = Cirrus Aerosol,  B2 = Blue,  B3 = Green,  B4 = Red,  B5 = NIR,  B6 = SWIR 1,  B7 = SWIR 2,  B9 = CIRRUS \t\n", color = "blue4",
